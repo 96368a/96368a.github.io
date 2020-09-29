@@ -2,10 +2,11 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>https://96368a.github.io/categories/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url><url>
-            <loc>https://96368a.github.io/posts/hello-world/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url><url>
-            <loc>https://96368a.github.io/posts/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url><url>
-            <loc>https://96368a.github.io/tags/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url><url>
-            <loc>https://96368a.github.io/tags/%E5%B0%9D%E8%AF%95/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url><url>
-            <loc>https://96368a.github.io/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url><url>
-            <loc>https://96368a.github.io/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url></urlset>
+            <loc>http://example.org/categories/</loc><lastmod>2020-09-29T22:27:11&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/posts/</loc><lastmod>2020-09-29T22:27:11&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/tags/</loc><lastmod>2020-09-29T22:27:11&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/posts/github-page/</loc><lastmod>2020-09-29T22:27:11&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/tags/%E5%B0%9D%E8%AF%95/</loc><lastmod>2020-09-29T22:27:11&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/</loc><lastmod>2020-09-29T22:27:11&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/</loc><lastmod>2020-09-29T22:27:11&#43;08:00</lastmod></url><url>
+            <loc>http://example.org/posts/hello-world/</loc><lastmod>2020-09-28T14:45:26&#43;08:00</lastmod></url></urlset>

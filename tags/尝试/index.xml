@@ -1,14 +1,21 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>尝试 - 标签 - 木末の博客 - 奇思妙想之处</title>
-        <link>https://96368a.github.io/tags/%E5%B0%9D%E8%AF%95/</link>
+        <link>http://example.org/tags/%E5%B0%9D%E8%AF%95/</link>
         <description>尝试 - 标签 - 木末の博客 - 奇思妙想之处</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 28 Sep 2020 14:45:26 &#43;0800</lastBuildDate><atom:link href="https://96368a.github.io/tags/%E5%B0%9D%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 29 Sep 2020 22:27:11 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/%E5%B0%9D%E8%AF%95/" rel="self" type="application/rss+xml" /><item>
+    <title>博客搭建踩坑记录</title>
+    <link>http://example.org/posts/github-page/</link>
+    <pubDate>Tue, 29 Sep 2020 22:27:11 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/github-page/</guid>
+    <description><![CDATA[博客搭建踩坑记录 生成博客文件 这里没什么坑的，直接生成静态文件，然后进pubilc文件将生成的静态文件上传到github 我这里已经上传过一次了]]></description>
+</item><item>
     <title>Hello world and 第一篇博文</title>
-    <link>https://96368a.github.io/posts/hello-world/</link>
+    <link>http://example.org/posts/hello-world/</link>
     <pubDate>Mon, 28 Sep 2020 14:45:26 &#43;0800</pubDate>
     <author>作者</author>
-    <guid>https://96368a.github.io/posts/hello-world/</guid>
+    <guid>http://example.org/posts/hello-world/</guid>
     <description><![CDATA[第一篇博文 害，我已经不知道这是我尝试的第几个博客了，以前总是由于各种原因， 被迫（就是懒）中断了博客的更新，现在有时间了，而且也是有这个需求了]]></description>
 </item></channel>
 </rss>
