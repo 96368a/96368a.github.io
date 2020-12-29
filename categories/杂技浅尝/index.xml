@@ -3,7 +3,14 @@
         <title>杂技浅尝 - 分类 - 木末の博客 - 奇思妙想之处</title>
         <link>http://example.org/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/</link>
         <description>杂技浅尝 - 分类 - 木末の博客 - 奇思妙想之处</description>
-        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 29 Sep 2020 22:27:11 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/" rel="self" type="application/rss+xml" /><item>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 29 Dec 2020 19:16:52 &#43;0800</lastBuildDate><atom:link href="http://example.org/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/" rel="self" type="application/rss+xml" /><item>
+    <title>博客优化</title>
+    <link>http://example.org/posts/%E5%8D%9A%E5%AE%A2%E4%BC%98%E5%8C%96-201229/</link>
+    <pubDate>Tue, 29 Dec 2020 19:16:52 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/%E5%8D%9A%E5%AE%A2%E4%BC%98%E5%8C%96-201229/</guid>
+    <description><![CDATA[#博客再次优化访问速度 ##前言 因为国内的域名备案政策，在加上github pages时不时的dns污染，博客每日在生死的边缘挣扎 所以我尽可能的]]></description>
+</item><item>
     <title>博客搭建踩坑记录</title>
     <link>http://example.org/posts/github-page/</link>
     <pubDate>Tue, 29 Sep 2020 22:27:11 &#43;0800</pubDate>
