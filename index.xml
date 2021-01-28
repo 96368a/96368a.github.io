@@ -1,6 +1,6 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>木末の博客 - 奇思妙想之处</title>
+        <title>木末の小站 - 奇思妙想之处</title>
         <link>http://example.org/</link>
         <description>个人博客 hugo 技术 宅 折腾</description>
         <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 26 Jan 2021 22:04:58 &#43;0800</lastBuildDate>
