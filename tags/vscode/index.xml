@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>vscode - 标签 - 木末の小站 - 奇思妙想之处</title>
+        <link>http://example.org/tags/vscode/</link>
+        <description>vscode - 标签 - 木末の小站 - 奇思妙想之处</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 11 Mar 2021 16:19:34 &#43;0800</lastBuildDate><atom:link href="http://example.org/tags/vscode/" rel="self" type="application/rss+xml" /><item>
+    <title>Vscode配置c/c&#43;&#43;环境</title>
+    <link>http://example.org/posts/vscode/</link>
+    <pubDate>Thu, 11 Mar 2021 16:19:34 &#43;0800</pubDate>
+    <author>作者</author>
+    <guid>http://example.org/posts/vscode/</guid>
+    <description><![CDATA[从零开始的vscode环境配置 前言 其实我电脑是配好环境的，不过因为时间太久了(本来也是东拼西凑来的配置)，忘记怎么配了。 今天给人配环境弄了好]]></description>
+</item></channel>
+</rss>
