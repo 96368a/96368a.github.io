@@ -1,2 +1,531 @@
-<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="&#34;auto&#34;"><head><meta charset="UTF-8"><link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png"><link rel="icon" href="/img/favicon.png"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="theme-color" content="#2f4154"><meta name="description" content=""><meta name="author" content="木末君"><meta name="keywords" content=""><title>Vscode配置c/c++环境 - 木末の小站 - 奇思妙想之处</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css"><link rel="stylesheet" href="/lib/hint/hint.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css"><link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css"><link rel="stylesheet" href="/css/main.css"><script id="fluid-configs">var Fluid=window.Fluid||{},CONFIG={hostname:"example.com",root:"/",version:"1.8.10",typing:{enable:!0,typeSpeed:70,cursorChar:"_",loop:!1},anchorjs:{enable:!0,element:"h1,h2,h3,h4,h5,h6",placement:"right",visible:"hover",icon:""},progressbar:{enable:!0,height_px:3,color:"#29d",options:{showSpinner:!1,trickleSpeed:100}},copy_btn:!0,image_zoom:{enable:!0,img_url_replace:["",""]},toc:{enable:!0,headingSelector:"h1,h2,h3,h4,h5,h6",collapseDepth:0},lazyload:{enable:!0,loading_img:"/img/loading.gif",onlypost:!1,offset_factor:2},web_analytics:{enable:!1,baidu:null,google:null,gtag:null,tencent:{sid:null,cid:null},woyaola:null,cnzz:null,leancloud:{app_id:null,app_key:null,server_url:null}}}</script><script src="/js/utils.js"></script><script src="/js/color-schema.js"></script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="木末の小站 - 奇思妙想之处" type="application/atom+xml">
-</head><body><header style="height:70vh"><nav id="navbar" class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar"><div class="container"><a class="navbar-brand" href="/">&nbsp;<strong>木末の小站 - 奇思妙想之处</strong>&nbsp;</a> <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><div class="animated-icon"><span></span><span></span><span></span></div></button><div class="collapse navbar-collapse" id="navbarSupportedContent"><ul class="navbar-nav ml-auto text-center"><li class="nav-item"><a class="nav-link" href="/"><i class="iconfont icon-home-fill"></i> 首页</a></li><li class="nav-item"><a class="nav-link" href="/categories/"><i class="iconfont icon-category-fill"></i> 分类</a></li><li class="nav-item"><a class="nav-link" href="/tags/"><i class="iconfont icon-tags-fill"></i> 标签</a></li><li class="nav-item"><a class="nav-link" href="/archives/"><i class="iconfont icon-archive-fill"></i> 归档</a></li><li class="nav-item"><a class="nav-link" href="/about/"><i class="iconfont icon-user-fill"></i> 关于</a></li><li class="nav-item"><a class="nav-link" href="/links/"><i class="iconfont icon-link-fill"></i> 友链</a></li><li class="nav-item" id="search-btn"><a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a></li><li class="nav-item" id="color-toggle-btn"><a class="nav-link" target="_self">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a></li></ul></div></div></nav><div class="banner" id="banner" parallax="true" style="background:url(/img/default.png) no-repeat center center;background-size:cover"><div class="full-bg-img"><div class="mask flex-center" style="background-color:rgba(0,0,0,.3)"><div class="page-header text-center fade-in-up"><span class="h2" id="subtitle" title="Vscode配置c/c++环境"></span><div class="mt-3"><span class="post-meta"><i class="iconfont icon-date-fill" aria-hidden="true"></i> <time datetime="2021-03-11 08:19" pubdate>2021年3月11日 早上</time></span></div><div class="mt-1"><span class="post-meta mr-2"><i class="iconfont icon-chart"></i> 914 字 </span><span class="post-meta mr-2"><i class="iconfont icon-clock-fill"></i> 10 分钟 </span><span id="busuanzi_container_page_pv" style="display:none"><i class="iconfont icon-eye" aria-hidden="true"></i> <span id="busuanzi_value_page_pv"></span> 次</span></div></div></div></div></div></header><main><div class="container-fluid nopadding-x"><div class="row nomargin-x"><div class="d-none d-lg-block col-lg-2"></div><div class="col-lg-8 nopadding-x-md"><div class="container nopadding-x-md" id="board-ctn"><div class="py-5" id="board"><article class="post-content mx-auto"><h1 style="display:none">Vscode配置c/c++环境</h1><div class="markdown-body"><h1 id="从零开始的vscode环境配置"><a href="#从零开始的vscode环境配置" class="headerlink" title="从零开始的vscode环境配置"></a>从零开始的vscode环境配置</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实我电脑是配好环境的，不过因为时间太久了(本来也是东拼西凑来的配置)，忘记怎么配了。</p><p>今天给人配环境弄了好一会竟然没弄好，实属感到有些丢人</p><p>遂决定重新配下并将过程记录下来</p><h2 id="一、安装自然不用我多说"><a href="#一、安装自然不用我多说" class="headerlink" title="一、安装自然不用我多说"></a>一、安装自然不用我多说</h2><p>附Vscode官网：[链接](<a target="_blank" rel="noopener" href="https://code.visualstudio.com/">https://code.visualstudio.com/</a> Vscode官网)</p><p>直接下载安装无脑下一步就好了</p><p><img src="https://img.imgdb.cn/item/6049d4775aedab222cf47e19.png" srcset="/img/loading.gif" lazyload></p><p>安装完直接打开</p><h2 id="二、安装必备插件"><a href="#二、安装必备插件" class="headerlink" title="二、安装必备插件"></a>二、安装必备插件</h2><p>图中第一个是运行c/c++代码必需插件，第二个是简体中文插件，安装完记得重启软件</p><p><img src="https://img.imgdb.cn/item/6049d5525aedab222cf5014e.png" srcset="/img/loading.gif" lazyload></p><h2 id="三、配置插件"><a href="#三、配置插件" class="headerlink" title="三、配置插件"></a>三、配置插件</h2><p>打开vscode左下角的设置按钮，然后选择命令面板</p><p><img src="https://img.imgdb.cn/item/6049d7255aedab222cf5e44e.png" srcset="/img/loading.gif" lazyload></p><p>然后在上方搜索框中输入c/c++,选择编辑配置选项（UI）；</p><p><img src="https://img.imgdb.cn/item/6049d7645aedab222cf5faec.png" srcset="/img/loading.gif" lazyload></p><p>然后找到你的编译器文件，选中文件，按住shitf+右键复制文件路径，粘贴到vscode的配置里，并将IntelliSense模式改为win-gcc-64（一定要改！！）<br>这里需要说明一下的是，c语言编译器是gcc,c++编译器是g++,g++能编译c语言和c++，但是gcc只能编译c语言，按自己的需求来选择编译器，我这里就选择g++了</p><p><img src="https://img.imgdb.cn/item/6049d9b75aedab222cf731b8.png" srcset="/img/loading.gif" lazyload></p><p><img src="https://img.imgdb.cn/item/6049da895aedab222cf7a960.png" srcset="/img/loading.gif" lazyload></p><p>随便打开一个文件，打上一个断点，按下F5开始调试<br>选择c++(GDB)</p><p><img src="https://img.imgdb.cn/item/6049dc5a5aedab222cf8a573.png" srcset="/img/loading.gif" lazyload></p><p>选择之前配置的编译器<br><img src="https://img.imgdb.cn/item/6049dc715aedab222cf8b25d.png" srcset="/img/loading.gif" lazyload></p><p>然后就会自动生成配置文件并运行了</p><p><img src="https://img.imgdb.cn/item/6049dc875aedab222cf8be8f.png" srcset="/img/loading.gif" lazyload></p><p>运行成功之后会停止断点处</p><p><img src="https://img.imgdb.cn/item/6049dc945aedab222cf8c5b6.png" srcset="/img/loading.gif" lazyload></p><p>到这一步就已经配置好了<br>在调试区自由的查看编辑变量什么的操作都可以完成了</p><p><img src="https://img.imgdb.cn/item/6049dd7e5aedab222cf94bbf.png" srcset="/img/loading.gif" lazyload></p><h2 id="优化配置"><a href="#优化配置" class="headerlink" title="优化配置"></a>优化配置</h2><p>由于c/c++程序在编译后会生成exe文件，编译的程序一多并且全部和源文件堆在一起让我有点强迫症发作</p><p>所以我习惯建一个bin文件夹来专门存放编译后的exe文件<br>首先新建一个文件夹</p><p><img src="https://img.imgdb.cn/item/6049df235aedab222cfa5d56.png" srcset="/img/loading.gif" lazyload></p><p>然后分别编辑配置文件launch.json和tasks.json<br>配置变量参考:</p><figure class="highlight plain"><figcaption><span>:表示当前workspace文件夹路径，也即/home/Coding/Test</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs $&#123;workspaceFolder&#125;">$&#123;workspaceRootFolderName&#125;:表示workspace的文件夹名，也即Test<br>$&#123;file&#125;:文件自身的绝对路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode&#x2F;tasks.json<br>$&#123;relativeFile&#125;:文件在workspace中的路径，也即.vscode&#x2F;tasks.json<br>$&#123;fileBasenameNoExtension&#125;:当前文件的文件名，不带后缀，也即tasks<br>$&#123;fileBasename&#125;:当前文件的文件名，tasks.json<br>$&#123;fileDirname&#125;:文件所在的文件夹路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode<br>$&#123;fileExtname&#125;:当前文件的后缀，也即.json<br>$&#123;lineNumber&#125;:当前文件光标所在的行号<br>$&#123;env:PATH&#125;:系统中的环境变量<br></code></pre></td></tr></table></figure><p>我的变量为:</p><blockquote><p><code>$&#123;workspaceFolder&#125;\\bin\\$&#123;fileBasenameNoExtension&#125;.exe</code> //表示在当前工作区的bin文件夹下编译调试</p></blockquote><p><img src="https://img.imgdb.cn/item/6049e0bd5aedab222cfb2bf9.png" srcset="/img/loading.gif" lazyload></p><p><img src="https://img.imgdb.cn/item/6049e0ca5aedab222cfb341c.png" srcset="/img/loading.gif" lazyload></p><p>最后建个嵌套文件夹试验一下</p><p><img src="https://img.imgdb.cn/item/6049e1805aedab222cfb9965.png" srcset="/img/loading.gif" lazyload></p><p>可以看到确实在编译在了bin文件夹下</p><h2 id="一些提示"><a href="#一些提示" class="headerlink" title="一些提示"></a>一些提示</h2><p>mingw工具链下的GDB不支持中文程序名，因此如果你使用中文文件名可能会出现下面的错误</p><p><img src="https://img.imgdb.cn/item/6049e2695aedab222cfc2318.png" srcset="/img/loading.gif" lazyload></p><h3 id="一个不算解决方法的解决方法"><a href="#一个不算解决方法的解决方法" class="headerlink" title="一个不算解决方法的解决方法"></a>一个不算解决方法的解决方法</h3><p>在launch.json和tasks.json文件中指定编译后的文件名，这样就不存在中文的问题了，<br>只是这样所有的程序编译后都会是那个文件名（问题不大，并没有什么影响）</p><p><img src="https://img.imgdb.cn/item/6049e4735aedab222cfd9db3.png" srcset="/img/loading.gif" lazyload></p><p><img src="https://img.imgdb.cn/item/6049e4815aedab222cfda7f5.png" srcset="/img/loading.gif" lazyload></p><p>图中的233.exe为编译后文件名可自定义</p><h2 id="写在后面的话"><a href="#写在后面的话" class="headerlink" title="写在后面的话"></a>写在后面的话</h2><p>Vscode有很多美化教程，自己去网上找找吧</p><p>总之VScode永远的神，前后端一把梭</p></div><hr><div><div class="post-metas mb-3"><div class="post-meta mr-3"><i class="iconfont icon-category"></i> <a class="hover-with-bg" href="/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/">杂技浅尝</a></div><div class="post-meta"><i class="iconfont icon-tags"></i> <a class="hover-with-bg" href="/tags/vscode/">vscode</a> <a class="hover-with-bg" href="/tags/c%E8%AF%AD%E8%A8%80/">c语言</a></div></div><p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p><div class="post-prevnext"><article class="post-prev col-6"><a href="/posts/56936/"><i class="iconfont icon-arrowleft"></i> <span class="hidden-mobile">记一次linux内核编译</span> <span class="visible-mobile">上一篇</span></a></article><article class="post-next col-6"><a href="/posts/22544/"><span class="hidden-mobile">手机开mincraft服务器</span> <span class="visible-mobile">下一篇</span> <i class="iconfont icon-arrowright"></i></a></article></div></div></article></div></div></div><div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn"><div id="toc"><p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p><div class="toc-body" id="toc-body"></div></div></div></div></div><a id="scroll-top-button" href="#" role="button"><i class="iconfont icon-arrowup" aria-hidden="true"></i></a><div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable modal-lg" role="document"><div class="modal-content"><div class="modal-header text-center"><h4 class="modal-title w-100 font-weight-bold">搜索</h4><button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body mx-3"><div class="md-form mb-5"><input type="text" id="local-search-input" class="form-control validate"> <label data-error="x" data-success="v" for="local-search-input">关键词</label></div><div class="list-group" id="local-search-result"></div></div></div></div></div></main><footer class="text-center mt-5 py-3"><div class="footer-content"><a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><br><img style="width:32px;height:32px" src="https://moe.blog/content/uploadfile/Links/icp.gov.moe.png" srcset="/img/loading.gif" lazyload><a href="https://icp.gov.moe" target="_blank" data-pjax-state=""><span style="color:red">萌</span><span style="color:#ca7900">I</span><span style="color:#48ab18">C</span><span style="color:#2720ac">P</span><span style="color:#9b17ae">备</span> </a><a href="https://icp.gov.moe/?keyword=20211000" target="_blank" data-pjax-state=""><span style="color:red">20</span><span style="color:#ca7900">21</span><span style="color:#48ab18">10</span><span style="color:#2720ac">00</span><span style="color:#f40428">号</span></a></div><div class="beian"><span><a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">湘ICP备2021000416号-1</a></span></div></footer><script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css"><script>NProgress.configure({showSpinner:!1,trickleSpeed:100}),NProgress.start(),window.addEventListener("load",(function(){NProgress.done()}))</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"></script><script src="/js/events.js"></script><script src="/js/plugins.js"></script><script src="/js/img-lazyload.js"></script><script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script><script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js"></script><script>!function(t,i){(0,Fluid.plugins.typing)(i.getElementById("subtitle").title)}(window,document)</script><script src="/js/local-search.js"></script><script>$("#local-search-input").on("click",(function(){searchFunc("/local-search.xml","local-search-input","local-search-result")})),$("#modalSearch").on("shown.bs.modal",(function(){$("#local-search-input").focus()}))</script><script src="/js/boot.js"></script></body></html>
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="木末君">
+  <meta name="keywords" content="">
+  
+  <title>Vscode配置c/c++环境 - 木末の小站 - 奇思妙想之处</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.10","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="木末の小站 - 奇思妙想之处" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>木末の小站 - 奇思妙想之处</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vscode配置c/c++环境">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-11 08:19" pubdate>
+        2021年3月11日 早上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      914 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      10
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vscode配置c/c++环境</h1>
+            
+            <div class="markdown-body">
+              <h1 id="从零开始的vscode环境配置"><a href="#从零开始的vscode环境配置" class="headerlink" title="从零开始的vscode环境配置"></a>从零开始的vscode环境配置</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实我电脑是配好环境的，不过因为时间太久了(本来也是东拼西凑来的配置)，忘记怎么配了。  </p>
+<p>今天给人配环境弄了好一会竟然没弄好，实属感到有些丢人</p>
+<p>遂决定重新配下并将过程记录下来</p>
+<h2 id="一、安装自然不用我多说"><a href="#一、安装自然不用我多说" class="headerlink" title="一、安装自然不用我多说"></a>一、安装自然不用我多说</h2><p>附Vscode官网：[链接](<a target="_blank" rel="noopener" href="https://code.visualstudio.com/">https://code.visualstudio.com/</a> Vscode官网)  </p>
+<p>直接下载安装无脑下一步就好了  </p>
+<p><img src="https://img.imgdb.cn/item/6049d4775aedab222cf47e19.png" srcset="/img/loading.gif" lazyload>  </p>
+<p>安装完直接打开</p>
+<h2 id="二、安装必备插件"><a href="#二、安装必备插件" class="headerlink" title="二、安装必备插件"></a>二、安装必备插件</h2><p>图中第一个是运行c/c++代码必需插件，第二个是简体中文插件，安装完记得重启软件  </p>
+<p><img src="https://img.imgdb.cn/item/6049d5525aedab222cf5014e.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="三、配置插件"><a href="#三、配置插件" class="headerlink" title="三、配置插件"></a>三、配置插件</h2><p>打开vscode左下角的设置按钮，然后选择命令面板  </p>
+<p><img src="https://img.imgdb.cn/item/6049d7255aedab222cf5e44e.png" srcset="/img/loading.gif" lazyload>  </p>
+<p>然后在上方搜索框中输入c/c++,选择编辑配置选项（UI）；</p>
+<p><img src="https://img.imgdb.cn/item/6049d7645aedab222cf5faec.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后找到你的编译器文件，选中文件，按住shitf+右键复制文件路径，粘贴到vscode的配置里，并将IntelliSense模式改为win-gcc-64（一定要改！！）<br>这里需要说明一下的是，c语言编译器是gcc,c++编译器是g++,g++能编译c语言和c++，但是gcc只能编译c语言，按自己的需求来选择编译器，我这里就选择g++了  </p>
+<p><img src="https://img.imgdb.cn/item/6049d9b75aedab222cf731b8.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://img.imgdb.cn/item/6049da895aedab222cf7a960.png" srcset="/img/loading.gif" lazyload></p>
+<p>随便打开一个文件，打上一个断点，按下F5开始调试<br>选择c++(GDB)  </p>
+<p><img src="https://img.imgdb.cn/item/6049dc5a5aedab222cf8a573.png" srcset="/img/loading.gif" lazyload></p>
+<p>选择之前配置的编译器<br><img src="https://img.imgdb.cn/item/6049dc715aedab222cf8b25d.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后就会自动生成配置文件并运行了  </p>
+<p><img src="https://img.imgdb.cn/item/6049dc875aedab222cf8be8f.png" srcset="/img/loading.gif" lazyload>  </p>
+<p>运行成功之后会停止断点处  </p>
+<p><img src="https://img.imgdb.cn/item/6049dc945aedab222cf8c5b6.png" srcset="/img/loading.gif" lazyload>  </p>
+<p>到这一步就已经配置好了<br>在调试区自由的查看编辑变量什么的操作都可以完成了  </p>
+<p><img src="https://img.imgdb.cn/item/6049dd7e5aedab222cf94bbf.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="优化配置"><a href="#优化配置" class="headerlink" title="优化配置"></a>优化配置</h2><p>由于c/c++程序在编译后会生成exe文件，编译的程序一多并且全部和源文件堆在一起让我有点强迫症发作  </p>
+<p>所以我习惯建一个bin文件夹来专门存放编译后的exe文件<br>首先新建一个文件夹  </p>
+<p><img src="https://img.imgdb.cn/item/6049df235aedab222cfa5d56.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后分别编辑配置文件launch.json和tasks.json<br>配置变量参考:</p>
+<figure class="highlight plain"><figcaption><span>:表示当前workspace文件夹路径，也即/home/Coding/Test</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs $&#123;workspaceFolder&#125;">$&#123;workspaceRootFolderName&#125;:表示workspace的文件夹名，也即Test<br>$&#123;file&#125;:文件自身的绝对路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode&#x2F;tasks.json<br>$&#123;relativeFile&#125;:文件在workspace中的路径，也即.vscode&#x2F;tasks.json<br>$&#123;fileBasenameNoExtension&#125;:当前文件的文件名，不带后缀，也即tasks<br>$&#123;fileBasename&#125;:当前文件的文件名，tasks.json<br>$&#123;fileDirname&#125;:文件所在的文件夹路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode<br>$&#123;fileExtname&#125;:当前文件的后缀，也即.json<br>$&#123;lineNumber&#125;:当前文件光标所在的行号<br>$&#123;env:PATH&#125;:系统中的环境变量<br></code></pre></td></tr></table></figure>
+<p>我的变量为:</p>
+<blockquote>
+<p><code>$&#123;workspaceFolder&#125;\\bin\\$&#123;fileBasenameNoExtension&#125;.exe</code> //表示在当前工作区的bin文件夹下编译调试</p>
+</blockquote>
+<p><img src="https://img.imgdb.cn/item/6049e0bd5aedab222cfb2bf9.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://img.imgdb.cn/item/6049e0ca5aedab222cfb341c.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后建个嵌套文件夹试验一下</p>
+<p><img src="https://img.imgdb.cn/item/6049e1805aedab222cfb9965.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到确实在编译在了bin文件夹下</p>
+<h2 id="一些提示"><a href="#一些提示" class="headerlink" title="一些提示"></a>一些提示</h2><p>mingw工具链下的GDB不支持中文程序名，因此如果你使用中文文件名可能会出现下面的错误</p>
+<p><img src="https://img.imgdb.cn/item/6049e2695aedab222cfc2318.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="一个不算解决方法的解决方法"><a href="#一个不算解决方法的解决方法" class="headerlink" title="一个不算解决方法的解决方法"></a>一个不算解决方法的解决方法</h3><p>在launch.json和tasks.json文件中指定编译后的文件名，这样就不存在中文的问题了，<br>只是这样所有的程序编译后都会是那个文件名（问题不大，并没有什么影响）</p>
+<p><img src="https://img.imgdb.cn/item/6049e4735aedab222cfd9db3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://img.imgdb.cn/item/6049e4815aedab222cfda7f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>图中的233.exe为编译后文件名可自定义</p>
+<h2 id="写在后面的话"><a href="#写在后面的话" class="headerlink" title="写在后面的话"></a>写在后面的话</h2><p>Vscode有很多美化教程，自己去网上找找吧</p>
+<p>总之VScode永远的神，前后端一把梭</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/">杂技浅尝</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/vscode/">vscode</a>
+                    
+                      <a class="hover-with-bg" href="/tags/c%E8%AF%AD%E8%A8%80/">c语言</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/56936/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">记一次linux内核编译</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/22544/">
+                        <span class="hidden-mobile">手机开mincraft服务器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br><img style="width:32px;height:32px" src="https://moe.blog/content/uploadfile/Links/icp.gov.moe.png" srcset="/img/loading.gif" lazyload><a href="https://icp.gov.moe" target="_blank" data-pjax-state=""><span style="color:#ff0000">萌</span><span style="color:#ca7900">I</span><span style="color:#48ab18">C</span><span style="color:#2720ac">P</span><span style="color:#9b17ae">备</span> </a><a href="https://icp.gov.moe/?keyword=20211000" target="_blank" data-pjax-state=""> <span style="color:#ff0000">20</span><span style="color:#ca7900">21</span><span style="color:#48ab18">10</span><span style="color:#2720ac">00</span><span style="color:#f40428">号</span></a> 
+  </div>
+  
+
+  
+  <!-- 备案信息 -->
+  <div class="beian">
+    <span>
+      <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+        湘ICP备2021000416号-1
+      </a>
+    </span>
+    
+  </div>
+
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
