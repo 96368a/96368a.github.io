@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>木末の小站 - 奇思妙想之处</title>
+  <icon>http://example.com/icon.png</icon>
+  <subtitle>有什么事吸引你能驻足片刻呢</subtitle>
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2021-05-03T14:26:32.814Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>木末君</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>记一次linux内核编译</title>
+    <link href="http://example.com/posts/56936/"/>
+    <id>http://example.com/posts/56936/</id>
+    <published>2021-04-22T05:09:51.000Z</published>
+    <updated>2021-05-03T14:26:32.814Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;debian10的内核编译&quot;&gt;&lt;a href=&quot;#debian10的内核编译&quot; class=&quot;headerlink&quot; title=&quot;debian10的内核编译&quot;&gt;&lt;/a&gt;debian10的内核编译&lt;/h1&gt;&lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="杂技浅尝" scheme="http://example.com/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/"/>
+    
+    
+    <category term="Linux" scheme="http://example.com/tags/Linux/"/>
+    
+    <category term="内核" scheme="http://example.com/tags/%E5%86%85%E6%A0%B8/"/>
+    
+    <category term="kernel" scheme="http://example.com/tags/kernel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vscode配置c/c++环境</title>
+    <link href="http://example.com/posts/47667/"/>
+    <id>http://example.com/posts/47667/</id>
+    <published>2021-03-11T00:19:34.000Z</published>
+    <updated>2021-05-03T14:26:17.701Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;从零开始的vscode环境配置&quot;&gt;&lt;a href=&quot;#从零开始的vscode环境配置&quot; class=&quot;headerlink&quot; title=&quot;从零开始的vscode环境配置&quot;&gt;&lt;/a&gt;从零开始的vscode环境配置&lt;/h1&gt;&lt;h2 id=&quot;前言&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="杂技浅尝" scheme="http://example.com/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/"/>
+    
+    
+    <category term="vscode" scheme="http://example.com/tags/vscode/"/>
+    
+    <category term="c语言" scheme="http://example.com/tags/c%E8%AF%AD%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>手机开mincraft服务器</title>
+    <link href="http://example.com/posts/22544/"/>
+    <id>http://example.com/posts/22544/</id>
+    <published>2021-01-26T06:04:58.000Z</published>
+    <updated>2021-05-03T14:22:21.178Z</updated>
+    
+    
+    <summary type="html">安卓上利用termux开minecraft服务器，安装jdk下载服务端启动一气呵成</summary>
+    
+    
+    
+    <category term="杂技浅尝" scheme="http://example.com/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/"/>
+    
+    
+    <category term="termux" scheme="http://example.com/tags/termux/"/>
+    
+    <category term="linux" scheme="http://example.com/tags/linux/"/>
+    
+    <category term="android" scheme="http://example.com/tags/android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>博客优化</title>
+    <link href="http://example.com/posts/27992/"/>
+    <id>http://example.com/posts/27992/</id>
+    <published>2020-12-29T03:16:52.000Z</published>
+    <updated>2021-05-03T14:29:22.077Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;博客再次优化访问速度&quot;&gt;&lt;a href=&quot;#博客再次优化访问速度&quot; class=&quot;headerlink&quot; title=&quot;博客再次优化访问速度&quot;&gt;&lt;/a&gt;博客再次优化访问速度&lt;/h1&gt;&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="杂技浅尝" scheme="http://example.com/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/"/>
+    
+    
+    <category term="hugo" scheme="http://example.com/tags/hugo/"/>
+    
+  </entry>
+  
+</feed>
