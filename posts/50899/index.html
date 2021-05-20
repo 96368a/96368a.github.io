@@ -20,22 +20,22 @@
   
   <title>网站加载速度优化指北 - 木末の小站 - 奇思妙想之处</title>
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css" />
   <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
   
     
     
       
-      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+      <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.6.0/styles/github-gist.min.css" />
     
   
 
   
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
   
 
 
@@ -171,7 +171,7 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/default.png') no-repeat center center;
+         style="background: url('https://img30.360buyimg.com/pop/jfs/t1/180735/10/5101/352844/60a654f4E56b569d3/d0a950eb33f6bfa8.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -198,7 +198,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      18 字
+      616 字
     </span>
   
 
@@ -208,12 +208,20 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      6
        分钟
     </span>
   
 
   
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
   
 </div>
 
@@ -241,7 +249,41 @@
             <h1 style="display: none">网站加载速度优化指北</h1>
             
             <div class="markdown-body">
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p>以我的博客为例，首先来看效果</p>
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因为没钱，所以博客用的免费的github pages，但是github pages这速度，真的是一言难尽，所以决定从网站结构的角度出发，来尽可能的优化一下网站的加载速度</p>
+<h1 id="网站静态资源优化"><a href="#网站静态资源优化" class="headerlink" title="网站静态资源优化"></a>网站静态资源优化</h1><h2 id="一、公共库优化"><a href="#一、公共库优化" class="headerlink" title="一、公共库优化"></a>一、公共库优化</h2><p>以我的博客为例子，随便打开一篇文章，然后打开谷歌浏览器的调试工具，切换到网络选项，Ctrl+F5强制刷新一下，然后等待加载完成，把结果按时间排序</p>
+<p><img src="https://pic.imgdb.cn/item/60a62bd16ae4f77d356b2d23.png" srcset="/img/loading.gif" lazyload alt="优化前加载时间"></p>
+<p>先从加载时间过长的外部资源入手，比如说bootstrap、jquery这种库，</p>
+<p>我这个主题默认用的是<a target="_blank" rel="noopener" href="https://www.jsdelivr.com/" title="jsdelivr">jsdelivr</a>，可以换成国内的<a target="_blank" rel="noopener" href="https://www.bootcdn.cn/" title="bootcdn">bootcdn</a>或者<a target="_blank" rel="noopener" href="https://cdn.baomitu.com/" title="baomitu">baomitu</a></p>
+<p><img src="https://pic.imgdb.cn/item/60a62d216ae4f77d3571edc2.png" srcset="/img/loading.gif" lazyload alt="静态资源分析"></p>
+<p>更换为bootcdn之后<br><img src="https://pic.imgdb.cn/item/60a6378c6ae4f77d35aaddb5.png" srcset="/img/loading.gif" lazyload alt="bootcdn加速"></p>
+<p><img src="https://pic.imgdb.cn/item/60a637576ae4f77d35a9e544.png" srcset="/img/loading.gif" lazyload alt="bootcdn加载"></p>
+<p>可以看到加速时间是快了很多的</p>
+<h2 id="二、图片优化"><a href="#二、图片优化" class="headerlink" title="二、图片优化"></a>二、图片优化</h2><p>公共库的优化搞定了之后，我们再来看看图片</p>
+<p><img src="https://pic.imgdb.cn/item/60a640e46ae4f77d35dbc245.png" srcset="/img/loading.gif" lazyload></p>
+<p>这加载时间实在是惨不忍睹，主要有两个优化方向</p>
+<h3 id="1-图片压缩"><a href="#1-图片压缩" class="headerlink" title="1.图片压缩"></a>1.图片压缩</h3><p>第一选择当然从根源入手了，想办法把图片文件的大小缩小不就好了，这里推荐两个图片在线压缩网站</p>
+<h4 id="1-tinypng"><a href="#1-tinypng" class="headerlink" title="1.tinypng"></a>1.<a target="_blank" rel="noopener" href="https://tinypng.com/" title="tinypng">tinypng</a></h4><p><img src="https://pic.imgdb.cn/item/60a643526ae4f77d35e93d02.png" srcset="/img/loading.gif" lazyload alt="tinypng"></p>
+<h4 id="2-docsmall"><a href="#2-docsmall" class="headerlink" title="2.docsmall"></a>2.<a target="_blank" rel="noopener" href="https://docsmall.com/image-compress" title="docsmall">docsmall</a></h4><p><img src="https://pic.imgdb.cn/item/60a643bf6ae4f77d35eb7d76.png" srcset="/img/loading.gif" lazyload alt="docsmall"></p>
+<p>这一类网站一搜一大把，压缩效果其实也差不多，至于选择用哪一个，那就仁者见仁，智者见智了，我最常用的是<a target="_blank" rel="noopener" href="https://tinypng.com/" title="tinypng">tinypng</a>。</p>
+<h3 id="图床"><a href="#图床" class="headerlink" title="图床"></a>图床</h3><p>如果可以，最好把图片和网站分开存放，不要过于相信你的服务器，反正网上的图床也是一搜一大把，找个带cdn的图床岂不美哉？</p>
+<p>烂大街的像<a target="_blank" rel="noopener" href="https://imgurl.org/" title="ImgURL">ImgURL</a>、<a target="_blank" rel="noopener" href="https://sm.ms/" title="SM.MS">SM.MS</a>、<a target="_blank" rel="noopener" href="https://imgtu.com/" title="路过图床">路过图床</a>这种我就不说了，我推荐几个小众的吧(跑路警告)</p>
+<p><del>1.<a target="_blank" rel="noopener" href="https://www.superbed.cn/" title="聚合图床">聚合图床</a></del></p>
+<p><del>这玩意也是我的主力</del><br>这狗玩意免费接口竟然也是抓的第三方…<br>啥接口都用，还不如第三个..，起码还能自己选一个快的</p>
+<p>2.<a target="_blank" rel="noopener" href="https://kjava.com/" title="酷Java图床">酷Java图床</a><br>v2ex看到的，速度还行</p>
+<p>3.<a target="_blank" rel="noopener" href="https://pic.onji.cn/" title="映画の图床">映画の图床</a><br>非自建图床，是位v友抓的大厂的接口，图片上传无法删除，而且存在一定风险(参考新浪图床防盗链事件)</p>
+<p>4.新增其他</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://img.so/">https://img.so/</a></li>
+<li><a target="_blank" rel="noopener" href="https://imgbb.com/">https://imgbb.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://youjb.com/">https://youjb.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://img.gejiba.com/">https://img.gejiba.com/</a></li>
+</ul>
+<blockquote>
+<p>说明</p>
+</blockquote>
+<p>公开图床存在跑路风险，自建图床怕被刷流量，至于Github+jsDelivr当图床，我并不赞成，而且速度也不咋地</p>
+<h2 id="三-CDN"><a href="#三-CDN" class="headerlink" title="三.CDN"></a>三.CDN</h2><p>还在试验，暂时没上</p>
+<p>未完待续…</p>
 
             </div>
             <hr>
@@ -259,11 +301,11 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/termux/">termux</a>
+                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%AB%99/">网站</a>
                     
-                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                      <a class="hover-with-bg" href="/tags/cdn/">cdn</a>
                     
-                      <a class="hover-with-bg" href="/tags/android/">android</a>
+                      <a class="hover-with-bg" href="/tags/%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90/">静态资源</a>
                     
                   </div>
                 
@@ -387,7 +429,7 @@
 
   <footer class="text-center mt-5 py-3">
   <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br><img style="width:32px;height:32px" src="https://icp.gov.moe/images/ico64.png" srcset="/img/loading.gif" lazyload><a href="https://icp.gov.moe" target="_blank" data-pjax-state=""><span style="color:#ff0000">萌</span><span style="color:#ca7900">I</span><span style="color:#48ab18">C</span><span style="color:#2720ac">P</span><span style="color:#9b17ae">备</span> </a><a href="https://icp.gov.moe/?keyword=20211000" target="_blank" data-pjax-state=""> <span style="color:#ff0000">20</span><span style="color:#ca7900">21</span><span style="color:#48ab18">10</span><span style="color:#2720ac">00</span><span style="color:#f40428">号</span></a> 
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br><img style="width:32px;height:32px" src="https://img30.360buyimg.com/pop/jfs/t1/178251/15/5131/4644/60a65641Ee9d0a7ad/77a6eb538f1a5886.png" srcset="/img/loading.gif" lazyload><a href="https://icp.gov.moe" target="_blank" data-pjax-state=""><span style="color:#ff0000">萌</span><span style="color:#ca7900">I</span><span style="color:#48ab18">C</span><span style="color:#2720ac">P</span><span style="color:#9b17ae">备</span> </a><a href="https://icp.gov.moe/?keyword=20211000" target="_blank" data-pjax-state=""> <span style="color:#ff0000">20</span><span style="color:#ca7900">21</span><span style="color:#48ab18">10</span><span style="color:#2720ac">00</span><span style="color:#f40428">号</span></a> 
   </div>
   
   <div class="statistics">
@@ -434,8 +476,8 @@
 
   <!-- SCRIPTS -->
   
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+  <script  src="https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -446,8 +488,8 @@
   </script>
 
 
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
@@ -464,19 +506,19 @@
 
 
 
-  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+  <script  src="https://cdn.bootcdn.net/ajax/libs/tocbot/4.12.2/tocbot.min.js" ></script>
 
 
 
-  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+  <script  src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
 
 
 
-  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+  <script  src="https://cdn.bootcdn.net/ajax/libs/anchor-js/4.3.0/anchor.min.js" ></script>
 
 
 
-  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+  <script defer src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.8/clipboard.min.js" ></script>
 
 
 
@@ -485,7 +527,7 @@
 
 
 
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script  src="https://cdn.bootcdn.net/ajax/libs/typed.js/2.0.11/typed.min.js" ></script>
   <script>
     (function (window, document) {
       var typing = Fluid.plugins.typing;
