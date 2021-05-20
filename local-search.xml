@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>网站加载速度优化指北</title>
+    <link href="/posts/50899/"/>
+    <url>/posts/50899/</url>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p>以我的博客为例，首先来看效果</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>网站</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>termux</tag>
+      
+      <tag>linux</tag>
+      
+      <tag>android</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>记一次linux内核编译</title>
     <link href="/posts/56936/"/>
     <url>/posts/56936/</url>
@@ -98,7 +127,7 @@
     
     <categories>
       
-      <category>杂技浅尝</category>
+      <category>网站</category>
       
     </categories>
     
