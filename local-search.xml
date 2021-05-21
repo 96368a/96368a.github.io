@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>网上冲(an)浪(quan)必备知识</title>
+    <link href="/posts/undefined/"/>
+    <url>/posts/undefined/</url>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近打算开始学网安了，这篇网上冲浪基础知识算是平时的一些积累吧，大佬勿喷</p><h1 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h1><p>域名是个啥呢，就是一个网站的名字，通过dns协议来解析到网站对应的ipv4地址嘛，ipv4地址用来做网站地址的话肯定不好记嘛，于是人们就发明了域名，记网站对应的英文名（现在支持中文及各种语言的域名了）加后缀就能直接访问网站了</p><h2 id="域名后缀"><a href="#域名后缀" class="headerlink" title="域名后缀"></a>域名后缀</h2><p>域名后缀，即顶级域名<br><img src="https://img30.360buyimg.com/pop/jfs/t1/189450/33/3621/27039/60a767bcE4bb0db1d/745a155ed94aa831.png" alt="域名后缀举例" title="域名后缀举例"></p><p>如图，<code>com</code>就是顶级域名(域名后缀)，而 <code>bing.com</code> 称为一级域名,以此类推 <code>www.bing.com</code> 就是二级域名，<br>一个域名后缀可以组成无数个一级域名，一个一级域名又可以分成无数个二级域名，<br>个人注册域名的话一般是选一个域名后缀，然后注册一级域名，注册完之后就可以进行二级域名分发了.<br>例如我博客的域名是<code>blog.233c.cn</code>,一级域名是<code>233c.cn</code>,而</p><ul><li><code>blog.233c.cn</code></li><li><code>pan.233c.cn</code></li><li><code>www.233c.cn</code><br>等，都是一级域名分发出去的二级域名</li></ul><p><strong>这里只需要了解一下常见域名后缀就行了</strong></p><blockquote><p>域名后缀一般分两种，国家缩写后缀和特殊含义后缀<br>顺便提一句，大型组织其实也能申请域名后缀(比如baidu)</p></blockquote><ul><li><strong><code>com</code>  <code>net</code> <code>org</code></strong> 国际通用域名</li><li><strong><code>cn</code></strong>  中国域名</li><li><strong><code>gov gov.*</code></strong> 政府域名，不怕死的尽管冲这种站</li><li><strong><code>edu edu.*</code></strong> 教育域名，可以白嫖国外大厂的学生套餐<br>剩下的都算是杂七乱八的域名</li><li><strong><code>top</code></strong></li><li><strong><code>xyz</code></strong></li><li><strong><code>top</code></strong></li></ul><h1 id="web协议-HTTP与HTTPS"><a href="#web协议-HTTP与HTTPS" class="headerlink" title="web协议(HTTP与HTTPS)"></a>web协议(HTTP与HTTPS)</h1><p>打算学网安的话，肯定要从web安全学起啦，所以网页传输协议还是有必要了解一下的</p><h2 id="1-HTTP"><a href="#1-HTTP" class="headerlink" title="1.HTTP"></a>1.HTTP</h2><p>HTTP,即超文本传输协议（Hypertext Transfer Protocol），这什么乱七八糟的不用管它，你只要知道这玩意是个明文协议就行，就因为明文传输数据很容易被中间人攻击，所以主流网站都已经淘汰了</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/187864/38/4204/56423/60a6638cE33f56c18/b22ca3b03184b75f.png" alt="http" title="http"></p><h2 id="2-HTTPS"><a href="#2-HTTPS" class="headerlink" title="2.HTTPS"></a>2.HTTPS</h2><p>HTTPS，就是HTTP+SSL，至于SSL是什么，你只要知道SSL是个加密协议就行，HTTPS利用ssl证书加密HTTP传输的内容，一定程度保证了网站的安全性</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/190699/19/4241/46274/60a663beE97055bd0/4fde71c889544fef.png" alt="https" title="https"></p><p>以谷歌浏览器为例，地址栏显示不安全的一般都是http协议（或者是有问题的https，比如证书过期），相反，https协议会显示安全连接,且可以查看到一个与域名对应的证书</p><p><strong>你所需要记住的大概就是http可以直接抓包（明文传输），https需要在本地安装伪装证书才能抓包</strong></p><h1 id="HTTP方法"><a href="#HTTP方法" class="headerlink" title="HTTP方法"></a>HTTP方法</h1><p>不管是https还是http，都是用http方法传输网页数据的，只不过https套了一层ssl证书加密</p><h2 id="get"><a href="#get" class="headerlink" title="get"></a>get</h2><p>按照我的理解，get是用来请求的数据的，get只获取数据，get的参数不会是服务器的内容发生改变<br><img src="https://img30.360buyimg.com/pop/jfs/t1/190184/4/4357/70086/60a778c5E54729a7a/4c0d0d1fe92ab5fc.png" alt="GET"><br>如图，get请求地址和参数以<code>&#39;?&#39;</code>为分隔，前面的 <code>https://cn.bing.com/search</code> 是请求地址,<br>而 <code>q=木末君&amp;qs=n&amp;form=QBRE&amp;...</code> 这些是请求参数<br>多个参数间以 <code>&#39;&amp;&#39;</code> 为分隔,也就是说 <code>q=木末君</code> 是一个参数，<code>qs=n</code> 也是一个参数</p><h2 id="post"><a href="#post" class="headerlink" title="post"></a>post</h2><p>还是按照我的理解，post是用来给服务器传数据的，<br><img src="https://img30.360buyimg.com/pop/jfs/t1/177863/34/5302/45060/60a77c87E57682171/e0fcda218b75215b.png" alt="post"></p><p>如图， <code>https://api.233c.cn/1.1/batch</code> 是请求地址，而请求参数，下面那一大段都是请求体，post的请求是多变的，最常见的还是get那种格式，图上是json格式</p><h2 id="http状态码"><a href="#http状态码" class="headerlink" title="http状态码"></a>http状态码</h2><p>HTTP状态码分类</p><table><thead><tr><th>分类</th><th>分类描述</th></tr></thead><tbody><tr><td>1**</td><td>信息，服务器收到请求，需要请求者继续执行操作</td></tr><tr><td>2**</td><td>成功，操作被成功接收并处理</td></tr><tr><td>3**</td><td>重定向，需要进一步的操作以完成请求</td></tr><tr><td>4**</td><td>客户端错误，请求包含语法错误或无法完成请求</td></tr><tr><td>5**</td><td>服务器错误，服务器在处理请求的过程中发生了错误</td></tr></tbody></table><p>大概看一下就行，具体需要记住的有</p><ul><li><strong>404 页面/资源不存在</strong></li><li><strong>403 页面/资源无权限访问</strong></li><li><strong>502 服务器出错</strong></li><li><strong>301/302 页面跳转</strong></li></ul><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>get与post对我来说最大的区别，大概就是请求参数一个在上面一个在下面</p><h2 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续.."></a>未完待续..</h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络安全</tag>
+      
+      <tag>域名</tag>
+      
+      <tag>协议</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>网站加载速度优化指北</title>
     <link href="/posts/50899/"/>
     <url>/posts/50899/</url>
