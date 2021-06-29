@@ -18,7 +18,7 @@
   <meta name="author" content="木末君">
   <meta name="keywords" content="个人博客,编程,玩机,脚本,网安">
   
-  <title>网站加载速度优化指北 - 木末の小站 - 奇思妙想之处</title>
+  <title>利用onedrive自建网盘 - 木末の小站 - 奇思妙想之处</title>
 
   <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -171,12 +171,12 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('https://img30.360buyimg.com/pop/jfs/t1/180735/10/5101/352844/60a654f4E56b569d3/d0a950eb33f6bfa8.jpg') no-repeat center center;
+         style="background: url('https://api.ghser.com/random/pc.php') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="网站加载速度优化指北">
+            <span class="h2" id="subtitle" title="利用onedrive自建网盘">
               
             </span>
 
@@ -186,8 +186,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-20 16:04" pubdate>
-        2021年5月20日 下午
+      <time datetime="2021-06-29 17:00" pubdate>
+        2021年6月29日 下午
       </time>
     </span>
   
@@ -198,7 +198,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      616 字
+      1.1k 字
     </span>
   
 
@@ -208,7 +208,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      13
        分钟
     </span>
   
@@ -246,44 +246,98 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">网站加载速度优化指北</h1>
+            <h1 style="display: none">利用onedrive自建网盘</h1>
             
             <div class="markdown-body">
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因为没钱，所以博客用的免费的github pages，但是github pages这速度，真的是一言难尽，所以决定从网站结构的角度出发，来尽可能的优化一下网站的加载速度</p>
-<h1 id="网站静态资源优化"><a href="#网站静态资源优化" class="headerlink" title="网站静态资源优化"></a>网站静态资源优化</h1><h2 id="一、公共库优化"><a href="#一、公共库优化" class="headerlink" title="一、公共库优化"></a>一、公共库优化</h2><p>以我的博客为例子，随便打开一篇文章，然后打开谷歌浏览器的调试工具，切换到网络选项，Ctrl+F5强制刷新一下，然后等待加载完成，把结果按时间排序</p>
-<p><img src="https://pic.imgdb.cn/item/60a62bd16ae4f77d356b2d23.png" srcset="/img/loading.gif" lazyload alt="优化前加载时间"></p>
-<p>先从加载时间过长的外部资源入手，比如说bootstrap、jquery这种库，</p>
-<p>我这个主题默认用的是<a target="_blank" rel="noopener" href="https://www.jsdelivr.com/" title="jsdelivr">jsdelivr</a>，可以换成国内的<a target="_blank" rel="noopener" href="https://www.bootcdn.cn/" title="bootcdn">bootcdn</a>或者<a target="_blank" rel="noopener" href="https://cdn.baomitu.com/" title="baomitu">baomitu</a></p>
-<p><img src="https://pic.imgdb.cn/item/60a62d216ae4f77d3571edc2.png" srcset="/img/loading.gif" lazyload alt="静态资源分析"></p>
-<p>更换为bootcdn之后<br><img src="https://pic.imgdb.cn/item/60a6378c6ae4f77d35aaddb5.png" srcset="/img/loading.gif" lazyload alt="bootcdn加速"></p>
-<p><img src="https://pic.imgdb.cn/item/60a637576ae4f77d35a9e544.png" srcset="/img/loading.gif" lazyload alt="bootcdn加载"></p>
-<p>可以看到加速时间是快了很多的</p>
-<h2 id="二、图片优化"><a href="#二、图片优化" class="headerlink" title="二、图片优化"></a>二、图片优化</h2><p>公共库的优化搞定了之后，我们再来看看图片</p>
-<p><img src="https://pic.imgdb.cn/item/60a640e46ae4f77d35dbc245.png" srcset="/img/loading.gif" lazyload></p>
-<p>这加载时间实在是惨不忍睹，主要有两个优化方向</p>
-<h3 id="1-图片压缩"><a href="#1-图片压缩" class="headerlink" title="1.图片压缩"></a>1.图片压缩</h3><p>第一选择当然从根源入手了，想办法把图片文件的大小缩小不就好了，这里推荐两个图片在线压缩网站</p>
-<h4 id="1-tinypng"><a href="#1-tinypng" class="headerlink" title="1.tinypng"></a>1.<a target="_blank" rel="noopener" href="https://tinypng.com/" title="tinypng">tinypng</a></h4><p><img src="https://pic.imgdb.cn/item/60a643526ae4f77d35e93d02.png" srcset="/img/loading.gif" lazyload alt="tinypng"></p>
-<h4 id="2-docsmall"><a href="#2-docsmall" class="headerlink" title="2.docsmall"></a>2.<a target="_blank" rel="noopener" href="https://docsmall.com/image-compress" title="docsmall">docsmall</a></h4><p><img src="https://pic.imgdb.cn/item/60a643bf6ae4f77d35eb7d76.png" srcset="/img/loading.gif" lazyload alt="docsmall"></p>
-<p>这一类网站一搜一大把，压缩效果其实也差不多，至于选择用哪一个，那就仁者见仁，智者见智了，我最常用的是<a target="_blank" rel="noopener" href="https://tinypng.com/" title="tinypng">tinypng</a>。</p>
-<h3 id="图床"><a href="#图床" class="headerlink" title="图床"></a>图床</h3><p>如果可以，最好把图片和网站分开存放，不要过于相信你的服务器，反正网上的图床也是一搜一大把，找个带cdn的图床岂不美哉？</p>
-<p>烂大街的像<a target="_blank" rel="noopener" href="https://imgurl.org/" title="ImgURL">ImgURL</a>、<a target="_blank" rel="noopener" href="https://sm.ms/" title="SM.MS">SM.MS</a>、<a target="_blank" rel="noopener" href="https://imgtu.com/" title="路过图床">路过图床</a>这种我就不说了，我推荐几个小众的吧(跑路警告)</p>
-<p><del>1.<a target="_blank" rel="noopener" href="https://www.superbed.cn/" title="聚合图床">聚合图床</a></del></p>
-<p><del>这玩意也是我的主力</del><br>这狗玩意免费接口竟然也是抓的第三方…<br>啥接口都用，还不如第三个..，起码还能自己选一个快的</p>
-<p>2.<a target="_blank" rel="noopener" href="https://kjava.com/" title="酷Java图床">酷Java图床</a><br>v2ex看到的，速度还行</p>
-<p>3.<a target="_blank" rel="noopener" href="https://pic.onji.cn/" title="映画の图床">映画の图床</a><br>非自建图床，是位v友抓的大厂的接口，图片上传无法删除，而且存在一定风险(参考新浪图床防盗链事件)</p>
-<p>4.新增其他</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://img.so/">https://img.so/</a></li>
-<li><a target="_blank" rel="noopener" href="https://imgbb.com/">https://imgbb.com/</a></li>
-<li><a target="_blank" rel="noopener" href="https://youjb.com/">https://youjb.com/</a></li>
-<li><a target="_blank" rel="noopener" href="https://img.gejiba.com/">https://img.gejiba.com/</a></li>
-</ul>
-<blockquote>
-<p>说明</p>
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一直想做一个视频站用来存天依的mv来着，奈何视频站成本太高了根本做不起…</p>
+<p>然后无意间发现了onedrive这个好东西，利用<a target="_blank" rel="noopener" href="https://github.com/spencerwooo/onedrive-cf-index">onedrive-cf-index</a>或<a target="_blank" rel="noopener" href="https://github.com/qkqpttgf/OneManager-php">OneManager-php</a>等可以白嫖微软的大容量网盘，本篇文章记录onedrive-cf-index搭建的全过程。</p>
+<h1 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h1><blockquote>
+<p>部署之前你得有一个OneDrive账号</p>
 </blockquote>
-<p>公开图床存在跑路风险，自建图床怕被刷流量，至于Github+jsDelivr当图床，我并不赞成，而且速度也不咋地</p>
-<h2 id="三-CDN"><a href="#三-CDN" class="headerlink" title="三.CDN"></a>三.CDN</h2><p>还在试验，暂时没上</p>
-<p>未完待续…</p>
+<h2 id="生成OneDrive-API令牌"><a href="#生成OneDrive-API令牌" class="headerlink" title="生成OneDrive API令牌"></a>生成OneDrive API令牌</h2><h3 id="1-访问-URL-创建新的-Blade-app："><a href="#1-访问-URL-创建新的-Blade-app：" class="headerlink" title="1. 访问 URL 创建新的 Blade app："></a>1. 访问 URL 创建新的 Blade app：</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">Microsoft Azure App registrations</a>（普通版 OneDrive）</li>
+<li><a target="_blank" rel="noopener" href="https://portal.azure.cn/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">Microsoft Azure.cn App registrations</a>（OneDrive 世纪互联版本）</li>
+</ul>
+<ol>
+<li><strong>建议将语言设置为「英语」以保证以下步骤中提到的模块和按钮的名称一致</strong>：</li>
+<li>使用你的 Microsoft 账户登录，选择 <code>New registration</code>；</li>
+<li>在 <code>Name</code> 处设置 Blade app 的名称，比如 <code>my-onedrive-cf-index</code>；</li>
+<li>将 <code>Supported account types</code> 设置为 <code>Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)</code>。OneDrive 世纪互联用户设置为：<code>任何组织目录（任何 Azure AD 目录 - 多租户）中的帐户</code>；</li>
+<li>将 <code>Redirect URI (optional)</code> 设置为 <code>Web</code>（下拉选项框）以及 <code>http://localhost</code>（URL 地址）；</li>
+<li>点击 <code>Register</code>.</li>
+</ol>
+<p><img src="https://mapp.alicdn.com/1624959452937zVysi9cGOGLXojy.png" srcset="/img/loading.gif" lazyload alt="注册应用"></p>
+<h3 id="2-获取client-id"><a href="#2-获取client-id" class="headerlink" title="2. 获取client_id"></a>2. 获取client_id</h3><p>打开注册好的应用，查看<code>client_id</code></p>
+<p><img src="https://mapp.alicdn.com/1624960073586X4Iy5tI55NAfors.png" srcset="/img/loading.gif" lazyload alt="获取client_id"></p>
+<h3 id="3-创建Client-secret"><a href="#3-创建Client-secret" class="headerlink" title="3.创建Client secret"></a>3.创建Client secret</h3><p>打开 <code>证书和密码</code> 面板，点击 <code>新客户端密码</code>，创建一个新的叫做 <code>client_secret</code> 的 Client secret，并将 <code>截止期限</code> 设置为 <code>Never</code>。点击 <code>添加</code> 并复制 <code>client_secret</code> 的 <code>Value</code> 并保存下来 <strong>（仅有此一次机会）</strong>：</p>
+<p><img src="https://mapp.alicdn.com/1624960504743Rb7mC84nwRbPEmz.png" srcset="/img/loading.gif" lazyload alt="创建Client secret"></p>
+<h3 id="4-添加权限"><a href="#4-添加权限" class="headerlink" title="4.添加权限"></a>4.添加权限</h3><p>打开 <code>API permissions</code> 面板，选择 <code>Microsoft Graph</code>，选择 <code>Delegated permissions</code>，并搜索 <code>offline_access, Files.Read, Files.Read.All</code> 这三个权限，<strong>选择这三个权限，并点击 <code>Add permissions</code>：</strong></p>
+<p><img src="https://mapp.alicdn.com/1624969497145V9czMRrajdhd4Zo.png" srcset="/img/loading.gif" lazyload alt="添加权限"></p>
+<p><strong>你应该确保开启前三个权限：</strong></p>
+<p><img src="https://mapp.alicdn.com/1624969496369ZQPCU90de5k6RSe.png" srcset="/img/loading.gif" lazyload alt="查看权限"></p>
+<h3 id="5-获取refresh-token"><a href="#5-获取refresh-token" class="headerlink" title="5.获取refresh_token"></a>5.获取refresh_token</h3><p>前往<a target="_blank" rel="noopener" href="http://nodejs.cn/download/">nodejs中文网</a>下载nodejs安装之后在命令行运行:</p>
+<p><code>npx @beetcb/ms-graph-cli</code></p>
+<p>依次选择onedrive版本并输入client_id、client_secret，然后回车等待跳转本地地址，最后将本地地址粘贴进来，最后得到refresh_token</p>
+<p>这里使用官方演示动图</p>
+<p><img src="https://pic.stackoverflow.wiki/uploadImages/111/8/55/226/2021/06/29/20/32/3635193c-a0a2-4e6a-be2d-2edb7daebaa4.svg" srcset="/img/loading.gif" lazyload alt="demo.svg"></p>
+<p>最后，官方建议建一个文件夹用来分享，而不是分享主目录，默认为 /Public</p>
+<h2 id="Cloudflare部署"><a href="#Cloudflare部署" class="headerlink" title="Cloudflare部署"></a>Cloudflare部署</h2><blockquote>
+<p>提示，你需要在cloudflare有一个绑定的域名，我这里用的是freedom的免费域名</p>
+</blockquote>
+<h3 id="1-获取cloudflare的令牌"><a href="#1-获取cloudflare的令牌" class="headerlink" title="1.获取cloudflare的令牌"></a>1.获取cloudflare的令牌</h3><ol>
+<li><p>打开 <a target="_blank" rel="noopener" href="https://dash.cloudflare.com/login">https://dash.cloudflare.com/login</a> 登录，选择你绑定的域名，下拉，右下角可以看到自己的区域ID(zone_id)和账号id(account_id)</p>
+<p><img src="https://p3-tt.byteimg.com/origin/pgc-image/9d1c822395fe4e9a8c5cd001ca77d6ba.png" srcset="/img/loading.gif" lazyload alt="查看各种id"></p>
+</li>
+<li><p>在 <code>Workers</code> -&gt; <code>管理 Workers</code> -&gt; <code>创建 Worker</code> 处创建一个worker(注意，Workers决定将来的域名前缀),保存部署即可</p>
+</li>
+</ol>
+<p><img src="https://mapp.alicdn.com/1624971184097GCkvzywcxqCmCWX.png" srcset="/img/loading.gif" lazyload alt="创建Workers"></p>
+<h3 id="2-配置项目"><a href="#2-配置项目" class="headerlink" title="2.配置项目"></a>2.配置项目</h3><p>​    1. clone<a target="_blank" rel="noopener" href="https://github.com/spencerwooo/onedrive-cf-index">onedrive-cf-index</a>项目到本地</p>
+<p>​    2. 在项目目录依次输入(需要nodejs环境)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 安装 CloudFlare Workers 官方编译部署工具</span><br>npm i @cloudflare/wrangler -g<br><br><span class="hljs-meta">#</span><span class="bash"> 使用 npm 安装依赖</span><br>npm install<br><br><span class="hljs-meta">#</span><span class="bash"> 使用 wrangler 登录 CloudFlare 账户</span><br>wrangler login<br><br><span class="hljs-meta">#</span><span class="bash"> 使用这一命令检查自己的登录状态</span><br>wrangler whoami```<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p>创建叫做 BUCKET 的 Cloudflare Workers KV bucket：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 创建 KV bucket</span><br>wrangler kv:namespace create &quot;BUCKET&quot;<br><br><span class="hljs-meta">#</span><span class="bash"> ... 或者，创建包括预览功能的 KV bucket</span><br>wrangler kv:namespace create &quot;BUCKET&quot; --preview<br><br></code></pre></td></tr></table></figure></li>
+<li><p>修改目录下的<code>wrangler.toml</code>更改为之前获取到的各种id</p>
+<ul>
+<li><code>name</code>：之前创建的 worker 名称，我们的 Worker 默认会发布到这一域名下：<code>&lt;name&gt;.&lt;worker_subdomain&gt;.workers.dev</code>；</li>
+<li><code>account_id</code>：我们的 Cloudflare 账号ID；</li>
+<li><code>zone_id</code>：我们的 Cloudflare 地区ID。</li>
+</ul>
+</li>
+<li><p>修改 <code>wrangler.toml</code>里面的 <code>kv_namespaces</code></p>
+<p>仅需替换 id 和（或者）preview_id 即可。如果不需要预览功能，那么移除 preview_id 即可。</p>
+</li>
+<li><p>修改 src/config/default.js</p>
+<ul>
+<li><code>client_id</code>：刚刚获取的 OneDrive <code>client_id</code>；</li>
+<li><code>base</code>：之前创建的 <code>base</code> 目录；</li>
+<li>如果你部署常规国际版 OneDrive，那么忽略以下步骤即可；</li>
+<li>如果你部署的是由世纪互联运营的中国版 OneDrive：<ul>
+<li>修改 <code>type</code> 下的 <code>accountType</code> 为 <code>1</code>；</li>
+<li>保持 <code>driveType</code> 不变；</li>
+</ul>
+</li>
+<li>如果你部署的是 SharePoint 服务：<ul>
+<li>保持 <code>accountType</code> 不变；</li>
+<li>修改 <code>driveType</code> 下的 <code>type</code> 为 <code>1</code>；</li>
+<li>并根据你的 SharePoint 服务修改 <code>hostName</code> 和 <code>sitePath</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>添加 Cloudflare Workers 环境变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 添加我们的 refresh_token 和 client_secret</span><br>wrangler secret put REFRESH_TOKEN<br><span class="hljs-meta">#</span><span class="bash"> ... 并在这里粘贴我们的 refresh_token</span><br><br>wrangler secret put CLIENT_SECRET<br><span class="hljs-meta">#</span><span class="bash"> ... 并在这里粘贴我们的 client_secret</span><br><br>wrangler secret put AUTH_PASSWORD<br><span class="hljs-meta">#</span><span class="bash"> ... 在这里输入我们自己设置的认证密码</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="3-预览-amp-发布"><a href="#3-预览-amp-发布" class="headerlink" title="3.预览&amp;发布"></a>3.预览&amp;发布</h3><p>最后，终于到发布了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">如果配置的预览可以先预览</span><br>wrangler preview<br><br><span class="hljs-meta">#</span><span class="bash">打包发布</span><br>wrangler publish<br></code></pre></td></tr></table></figure>
+
+<p>最后，访问发布得到的地址即可</p>
+<p><img src="https://mapp.alicdn.com/1624973953533bpXRln0KQoUoZIS.png" srcset="/img/loading.gif" lazyload alt="最终效果图"></p>
+<p>这是我往onedrive里随便存的文件，可以看到是没问题的</p>
+<p><img src="https://mapp.alicdn.com/16249739532448Fs2oH78N2Lg4cx.png" srcset="/img/loading.gif" lazyload alt="onedrive"></p>
+<h1 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h1><p>就像这样了，有空再美化一下，还得研究一下onedrive上传方案</p>
 
             </div>
             <hr>
@@ -293,7 +347,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E7%BD%91%E7%AB%99/">网站</a>
+                      <a class="hover-with-bg" href="/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/">杂技浅尝</a>
                     
                   </div>
                 
@@ -301,11 +355,11 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%AB%99/">网站</a>
+                      <a class="hover-with-bg" href="/tags/ondedrive/">ondedrive</a>
                     
-                      <a class="hover-with-bg" href="/tags/cdn/">cdn</a>
+                      <a class="hover-with-bg" href="/tags/cloudflare/">cloudflare</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90/">静态资源</a>
+                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%9B%98/">网盘</a>
                     
                   </div>
                 
@@ -322,18 +376,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/10001/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">网上冲(an)浪(quan)必备知识</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/56936/">
-                        <span class="hidden-mobile">记一次linux内核编译</span>
+                      <a href="/posts/10001/">
+                        <span class="hidden-mobile">网上冲(an)浪(quan)必备知识</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
