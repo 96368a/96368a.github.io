@@ -6,7 +6,7 @@
   <link href="http://blog.233c.cn/atom.xml" rel="self"/>
   
   <link href="http://blog.233c.cn/"/>
-  <updated>2021-06-29T13:41:43.469Z</updated>
+  <updated>2021-07-03T05:39:10.565Z</updated>
   <id>http://blog.233c.cn/</id>
   
   <author>
@@ -15,6 +15,42 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>sql注入入门(草稿)</title>
+    <link href="http://blog.233c.cn/posts/10003/"/>
+    <id>http://blog.233c.cn/posts/10003/</id>
+    <published>2021-06-30T07:47:09.000Z</published>
+    <updated>2021-07-03T05:39:10.565Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;观前提醒&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;本篇文章需要前置知识&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;知道什么是sql数据库&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;了解基本sql语</summary>
+        
+      
+    
+    
+    
+    <category term="网络安全" scheme="http://blog.233c.cn/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="网络安全" scheme="http://blog.233c.cn/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/"/>
+    
+    <category term="sql" scheme="http://blog.233c.cn/tags/sql/"/>
+    
+    <category term="注入" scheme="http://blog.233c.cn/tags/%E6%B3%A8%E5%85%A5/"/>
+    
+  </entry>
   
   <entry>
     <title>利用onedrive自建网盘</title>
