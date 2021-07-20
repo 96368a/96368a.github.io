@@ -6,7 +6,7 @@
   <link href="http://blog.233c.cn/atom.xml" rel="self"/>
   
   <link href="http://blog.233c.cn/"/>
-  <updated>2021-07-03T05:39:10.565Z</updated>
+  <updated>2021-07-20T05:22:11.261Z</updated>
   <id>http://blog.233c.cn/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>vscode多套环境配置指南</title>
+    <link href="http://blog.233c.cn/posts/10004/"/>
+    <id>http://blog.233c.cn/posts/10004/</id>
+    <published>2021-07-20T03:40:56.000Z</published>
+    <updated>2021-07-20T05:22:11.261Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="环境配置" scheme="http://blog.233c.cn/categories/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    
+    
+    <category term="vscode" scheme="http://blog.233c.cn/tags/vscode/"/>
+    
+    <category term="环境配置" scheme="http://blog.233c.cn/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    
+    <category term="Javascript" scheme="http://blog.233c.cn/tags/Javascript/"/>
+    
+  </entry>
   
   <entry>
     <title>sql注入入门(草稿)</title>
