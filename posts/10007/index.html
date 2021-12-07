@@ -18,7 +18,7 @@
   <meta name="author" content="木末君">
   <meta name="keywords" content="个人博客,编程,玩机,脚本,网安">
   
-  <title>脚本小子初体验之——后渗透 - 木末の小站 - 奇思妙想之处</title>
+  <title>vulnhub系列之COFFEE ADDICTS - 木末の小站 - 奇思妙想之处</title>
 <meta name="google-site-verification" content="KTQzSfNVTTA03-U0E7Md8pBPstQXd95hswuVwkXmRWY" />
 <meta name="msvalidate.01" content="CFF6F664650ABB7467B83086E0554A8A" />
   <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
@@ -177,7 +177,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="脚本小子初体验之——后渗透">
+            <span class="h2" id="subtitle" title="vulnhub系列之COFFEE ADDICTS">
               
             </span>
 
@@ -187,8 +187,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-10-27 23:51" pubdate>
-        2021年10月27日 晚上
+      <time datetime="2021-12-01 14:00" pubdate>
+        2021年12月1日 下午
       </time>
     </span>
   
@@ -199,7 +199,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      572 字
+      623 字
     </span>
   
 
@@ -247,63 +247,50 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">脚本小子初体验之——后渗透</h1>
+            <h1 style="display: none">vulnhub系列之COFFEE ADDICTS</h1>
             
             <div class="markdown-body">
-              <h1 id="记第一次后渗透"><a href="#记第一次后渗透" class="headerlink" title="记第一次后渗透"></a>记第一次后渗透</h1><blockquote>
-<p>在此感谢我的学长<a target="_blank" rel="noopener" href="http://1.117.149.93/">@竹林寺</a></p>
-</blockquote>
-<p>环境说明：</p>
-<table>
-<thead>
-<tr>
-<th>服务器</th>
-<th>网段说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>web服务器</td>
-<td>192.168.30.136/10.10.10.150</td>
-</tr>
-<tr>
-<td>域控服务器</td>
-<td>192网段不可用/10.10.10.149</td>
-</tr>
-</tbody></table>
-<p>靶场是白嫖我学长的，初始是给了域名要自己改host</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/130840/35/23243/31297/616a911fEf3ddabb4/4b43d712b137e4c9.png" srcset="/img/loading.gif" lazyload alt="1.png"></p>
-<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>主站是个贷款界面，扫了一圈没发现有能利用的，倒是网站用的框架thinkphp可能有点洞</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/216586/26/604/165292/616a92a6E038c3441/a943be62bb25b508.png" srcset="/img/loading.gif" lazyload alt="2.png"></p>
-<p>后台有验证码，抓个包发现存在验证码重放漏洞，也就是说能爆破管理员账号</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/200415/40/13279/1437724/616a94d1Ebe1a1e14/868c7cd9094c2220.png" srcset="/img/loading.gif" lazyload alt="3.png"></p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/214109/37/628/162953/616a94d0E56bf9574/a8993b6a33c84775.png" srcset="/img/loading.gif" lazyload alt="4.png"></p>
-<p>爆破基本上是没有用的(主要是靶机已经被我打宕机过了233)，我们看看有没有其他突破口</p>
-<p>百度(bushi)可知，thinkphp3和thinkphp5有一个日志泄露漏洞，随便找个工具扫扫看，<a target="_blank" rel="noopener" href="https://github.com/r3change/TPLogScan">地址</a></p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/197607/21/13529/146444/616a9708E965d7f63/62ade3bffae415c7.png" srcset="/img/loading.gif" lazyload alt="5.png"></p>
-<p>由图可知确实存在信息泄露漏洞，而thinkphp日志里是有sql执行记录的，访问日志，直接搜索password，找到管理员密码的hash(一定要管理员那一天登陆过日志里才有记录)</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/156914/18/21348/166690/616a984cEf6d54d9e/24b4944a7516b50c.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>解码hash直接登录后台，找到一个logo的上传点</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/207262/23/5228/212059/616a9998E03ff789e/c5c40c09c794a5ab.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>多种图片马各种绕未果，可能是白名单+重命名，最后发现上面有个上传白名单设计，眼瞎了(太心急的结果)</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/197149/12/13598/201254/616a9a30E6e5d38ff/11731e294d624998.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>添加php类型后上传shell，可以看到shell没问题，上蚁剑</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/207605/40/5565/205279/616a9c02E0ba747a4/8fbc749f3c058d6f.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>直接用cs生成脚本，然后用蚁剑的虚拟终端把shell弹到cs上去</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/218480/26/626/86008/616a9e73E092e0e7b/6f0ceee640a8c7ed.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>cs中看到会话已经有了，顺手来个权限提升，方便使用mimikatz</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/171663/24/23601/170674/616a9fb6E209bc712/a4f2ac6e937641d6.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>执行ipconfig /all，找到域服务器地址及当前主机在服务器的名字，方便进行域渗透</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/201518/13/11927/286017/616aa0bcE049ba883/83986a8f98d65ecb.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>百度(bushi)搜索域控提权，然后随便找一个，比如说ms14-068，然后看看有没有补丁</p>
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/198078/2/13162/69646/616ab0acE3ebf9f7b/8650d7b8ae24ee2f.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>没有返回结果就是最好的结果，这意味漏洞没有打补丁,准备生成票据攻击域控</p>
-<p>用mimikatz查看密码，再用查看域用户的sid</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">wmic useraccount get name,sid<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://img30.360buyimg.com/pop/jfs/t1/210559/6/5602/64169/616ac83fE4e51bc1b/410eb564ffa525db.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p>ms14-068需要四个参数，分别是域用户名@域名，域用户sid，域用户密码，域控地址</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">shell c:\Windows\temp\MS14-068.exe -u web@hackbox.com -s S-1-5-21-2005268815-658469957-1189185684-1103 -p !@#Qwe456 -d 10.10.10.149<br></code></pre></td></tr></table></figure>
-
+              <h1 id="vulnhub系列之COFFEE-ADDICTS"><a href="#vulnhub系列之COFFEE-ADDICTS" class="headerlink" title="vulnhub系列之COFFEE ADDICTS"></a>vulnhub系列之COFFEE ADDICTS</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>快比赛了随便刷刷靶机，太菜了只敢去vulnhub挑一点easy难度的，就这个吧</p>
+<p><img src="https://i.233c.cn/2021/12/02/88b0c2ae1775a.png" srcset="/img/loading.gif" lazyload alt="image-20211202195339670"></p>
+<p>为了防止出现莫名其妙的问题，这里直接用virtual搭建靶机算了，导入开机就能用</p>
+<p><img src="https://i.233c.cn/2021/12/02/da9add28fd671.png" srcset="/img/loading.gif" lazyload alt="image-20211202200627020"></p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>nmap默认扫描一波，按照经验都是从web入手的，剩余这里就是走个过场，对了，我这里使用的是wsl2 kali</p>
+<p><img src="https://i.233c.cn/2021/12/02/c7604f72e42be.png" srcset="/img/loading.gif" lazyload alt="image-20211202203154296"></p>
+<p>直接访问web</p>
+<p><img src="https://i.233c.cn/2021/12/02/d0788b7776aee.png" srcset="/img/loading.gif" lazyload alt="image-20211202204618767"></p>
+<p>这里给提示了，改host然后访问正确的域名</p>
+<p><img src="https://i.233c.cn/2021/12/02/da44e7a292622.png" srcset="/img/loading.gif" lazyload alt="image-20211202204830608"></p>
+<h2 id="web渗透"><a href="#web渗透" class="headerlink" title="web渗透"></a>web渗透</h2><p>掏出dirb扫描目录，然后发现是wordpress站点，然后再掏出wpscan,趁着扫描的功夫去网站上看一眼</p>
+<p><img src="https://i.233c.cn/2021/12/02/ef2f7f080d51d.png" srcset="/img/loading.gif" lazyload alt="image-20211202205619716"></p>
+<p>网站上发现了奇怪的评论，疑似存在密码</p>
+<p><img src="https://i.233c.cn/2021/12/02/0dd74ca49341a.png" srcset="/img/loading.gif" lazyload alt="image-20211202214619463"></p>
+<p>经过尝试发现密码是这句话去掉空格，然后直接用gus用户进wordpress后台</p>
+<p><img src="https://i.233c.cn/2021/12/02/a1e2715e18065.png" srcset="/img/loading.gif" lazyload alt="image-20211202214743495"></p>
+<p>这时候顺便回头看了眼wpscan扫描结果，最新版的wordpress，不用想了，不过已经进后台了那也不用管了</p>
+<p><img src="https://i.233c.cn/2021/12/03/81bbbceacd6ce.png" srcset="/img/loading.gif" lazyload alt="image-20211203171551618"></p>
+<p>随便找个可以写php的地方，直接弹shell吧，经过测试直接执行弹shell命令无效，所以我这里写入文件之后再执行<img src="https://i.233c.cn/2021/12/03/5535de834259a.png" srcset="/img/loading.gif" lazyload alt="image-20211203171714655"></p>
+<p>访问刚刚更改的php文件，反弹成功</p>
+<p><img src="https://i.233c.cn/2021/12/03/ec13b0d2780b7.png" srcset="/img/loading.gif" lazyload alt="image-20211203171853259"></p>
+<h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><p>随便翻翻，gus目录下发现两个可疑文件，那个user.txt里面有一串疑似flag的东西</p>
+<p><img src="https://i.233c.cn/2021/12/03/c093049c15971.png" srcset="/img/loading.gif" lazyload alt="image-20211203175206428"></p>
+<p>再去黑客的用户目录下看看，发现了他的ssh私钥</p>
+<p><img src="https://i.233c.cn/2021/12/03/97ee1d6dee6ab.png" srcset="/img/loading.gif" lazyload alt="image-20211203175331981"></p>
+<p>把私钥保存下来，尝试导入xshell发现需要密码，这时候只能试试爆破了</p>
+<p><img src="https://i.233c.cn/2021/12/03/0dab3cd0a0a0e.png" srcset="/img/loading.gif" lazyload alt="image-20211203182419980"></p>
+<p>我们使用john工具来爆破密码，这里需要用到一个脚本(<a target="_blank" rel="noopener" href="https://github.com/openwall/john/blob/bleeding-jumbo/run/ssh2john.py">链接</a>)把id_rsa私钥转成john能识别的格式，然后john直接爆破就行，然后密码竟然就是password…</p>
+<p><img src="https://i.233c.cn/2021/12/03/5c15c4f55b238.png" srcset="/img/loading.gif" lazyload alt="image-20211203184314880"></p>
+<p>然后直接ssh连上去，sudo试探一下，果然没权限，革命尚未成功，同志仍需努力啊</p>
+<p><img src="https://i.233c.cn/2021/12/03/6a73325c53305.png" srcset="/img/loading.gif" lazyload alt="image-20211203184443438"></p>
+<p>熟练的找下suid提权，emmm，一无所获，看来suid提权走不通</p>
+<p><img src="https://i.233c.cn/2021/12/03/bf4913941c1e5.png" srcset="/img/loading.gif" lazyload alt="image-20211203184818430"></p>
+<p>突然想到之前badbyte用户下面有几个打不开的文件，果然，有好东西</p>
+<p><img src="https://i.233c.cn/2021/12/03/72f0a8556ee8b.png" srcset="/img/loading.gif" lazyload alt="image-20211203185504521"></p>
+<p>黑客前几条命令是在改网站，看后面几条，疑似提权，跟着操作一下，直接拿到root权限</p>
+<p><img src="https://i.233c.cn/2021/12/03/2d8240bbd6d16.png" srcset="/img/loading.gif" lazyload alt="image-20211203185628303"></p>
+<p>到这里，这个靶机算是完成了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个靶机还是比较基础了，并没有什么高度操作，总的来说还是自己太菜了，中途看了几次wp才做完</p>
+<p>好了，准备开下一个，各位再见</p>
+<p><img src="https://i.233c.cn/2021/12/03/d8e95e4ed8a6a.webp" srcset="/img/loading.gif" lazyload alt="get_thumbnail"></p>
 
             </div>
             <hr>
@@ -321,11 +308,11 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
+                      <a class="hover-with-bg" href="/tags/vulnhub/">vulnhub</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9D%B6%E6%9C%BA/">靶机</a>
+                    
                       <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>
-                    
-                      <a class="hover-with-bg" href="/tags/%E5%90%8E%E6%B8%97%E9%80%8F/">后渗透</a>
-                    
-                      <a class="hover-with-bg" href="/tags/CobaltStrike/">CobaltStrike</a>
                     
                   </div>
                 
@@ -342,9 +329,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/10007/">
+                      <a href="/posts/10008/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">vulnhub系列之COFFEE ADDICTS</span>
+                        <span class="hidden-mobile">vulnhub系列之MOMENTUM：1</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -352,8 +339,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/10005/">
-                        <span class="hidden-mobile">大一暑假的一些反思</span>
+                      <a href="/posts/10006/">
+                        <span class="hidden-mobile">脚本小子初体验之——后渗透</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

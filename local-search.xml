@@ -4,9 +4,38 @@
   
   
   <entry>
+    <title>vulnhub系列之MOMENTUM：1</title>
+    <link href="/posts/10008/"/>
+    <url>/posts/10008/</url>
+    
+    <content type="html"><![CDATA[<h1 id="vulnhub系列之MOMENTUM-1"><a href="#vulnhub系列之MOMENTUM-1" class="headerlink" title="vulnhub系列之MOMENTUM: 1"></a>vulnhub系列之MOMENTUM: 1</h1><blockquote><p>环境搭建直接略过，vbox桥接没什么好说的</p></blockquote><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>老一套没什么好说的，直接奔网页去就完了</p><p><img src="https://i.233c.cn/2021/12/07/9dc618b84443a.png" alt="image-20211207195546751"></p><p>网页端比较简陋</p><p><img src="https://i.233c.cn/2021/12/07/1e82ee2b4c2ad.png" alt="image-20211207203511094"></p><p>目录扫描扫出来一大堆东西，这目录下面有好的东西，访问一下先</p><p><img src="https://i.233c.cn/2021/12/07/895abe17ca82c.png" alt="image-20211207203610737"></p><p>貌似是apache的文档，大概没啥用，先看看其他的</p><p><img src="https://i.233c.cn/2021/12/07/385fb5de0bb0f.png" alt="image-20211207203700212"></p><p>点击主站的图片可以跳转到这，存在xss，貌似也没啥用</p><p><img src="https://i.233c.cn/2021/12/07/c72e23ad5a62f.png" alt="image-20211207203944741"></p><p>随便翻翻，在js文件里发现一些注释以后的代码，是个aes解密，先把密钥记下来</p><p><img src="https://i.233c.cn/2021/12/07/328a34f896719.png" alt="image-20211207204102489"></p><h2 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h2><p>到这我就卡住了，目前已有的线索似乎连不起来，等等，xss会不会是个提示，去cookie看看，有个这玩意</p><p><img src="https://i.233c.cn/2021/12/07/9b9481b0c925b.png" alt="image-20211207204656533"></p><p>emmm，还是不知道有啥用，看wp发现原来是用之前拿到的密钥aes解密一下，得到这个，盲猜是ssh账号密码</p><p><img src="https://i.233c.cn/2021/12/07/099f0b34f32d3.png" alt="image-20211207205641848"></p><p>然后，在我怀疑人生的时候，我终于试出了账号是auxerre，密码auxerre-alienum##的ssh用户</p><p><img src="https://i.233c.cn/2021/12/07/e64d5c8942d3f.png" alt="image-20211207205816817"></p><h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2><p>老规矩试探一下suid提权，果然没戏</p><p><img src="https://i.233c.cn/2021/12/07/0f67b79bca5e8.png" alt="image-20211207211929041"></p><p>用新漏洞提权就太没意思了，先找找看有没有什么线索，然而文件里啥线索都没发现，倒是发现一个flag</p><p><img src="https://i.233c.cn/2021/12/07/91dac8105f15a.png" alt="image-20211207212106515"></p><p>看样子不是文件提权了，看看有啥服务可以利用吗，然后就发现了redis服务</p><p><img src="https://i.233c.cn/2021/12/07/fd243cc1e8152.png" alt="image-20211207212333515"></p><p>之前听说过redis未授权漏洞，但没有用过</p><p>直接用redis-cli就进去了，果然有未授权，不管了，先看看有没有啥数据，然后…</p><p><img src="https://i.233c.cn/2021/12/07/0a189276f5a15.png" alt="image-20211207212558787"></p><p>结束了？</p><p><img src="https://i.233c.cn/2021/12/07/26fc8082df23f.png" alt="image-20211207212929632"></p><p><img src="https://www.mcmod.cn/pages/tools/achievements/images/achievements/24789_xWwWIXbu.png"></p><p>是的，结束了…</p><p><img src="https://i.233c.cn/2021/12/07/090cc2bcb066c.png" alt="image-20211207213607930"></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>非常简单的一个靶机，没啥好说的</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>vulnhub</tag>
+      
+      <tag>靶机</tag>
+      
+      <tag>网络安全</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>vulnhub系列之COFFEE ADDICTS</title>
-    <link href="/posts/100007/"/>
-    <url>/posts/100007/</url>
+    <link href="/posts/10007/"/>
+    <url>/posts/10007/</url>
     
     <content type="html"><![CDATA[<h1 id="vulnhub系列之COFFEE-ADDICTS"><a href="#vulnhub系列之COFFEE-ADDICTS" class="headerlink" title="vulnhub系列之COFFEE ADDICTS"></a>vulnhub系列之COFFEE ADDICTS</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>快比赛了随便刷刷靶机，太菜了只敢去vulnhub挑一点easy难度的，就这个吧</p><p><img src="https://i.233c.cn/2021/12/02/88b0c2ae1775a.png" alt="image-20211202195339670"></p><p>为了防止出现莫名其妙的问题，这里直接用virtual搭建靶机算了，导入开机就能用</p><p><img src="https://i.233c.cn/2021/12/02/da9add28fd671.png" alt="image-20211202200627020"></p><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>nmap默认扫描一波，按照经验都是从web入手的，剩余这里就是走个过场，对了，我这里使用的是wsl2 kali</p><p><img src="https://i.233c.cn/2021/12/02/c7604f72e42be.png" alt="image-20211202203154296"></p><p>直接访问web</p><p><img src="https://i.233c.cn/2021/12/02/d0788b7776aee.png" alt="image-20211202204618767"></p><p>这里给提示了，改host然后访问正确的域名</p><p><img src="https://i.233c.cn/2021/12/02/da44e7a292622.png" alt="image-20211202204830608"></p><h2 id="web渗透"><a href="#web渗透" class="headerlink" title="web渗透"></a>web渗透</h2><p>掏出dirb扫描目录，然后发现是wordpress站点，然后再掏出wpscan,趁着扫描的功夫去网站上看一眼</p><p><img src="https://i.233c.cn/2021/12/02/ef2f7f080d51d.png" alt="image-20211202205619716"></p><p>网站上发现了奇怪的评论，疑似存在密码</p><p><img src="https://i.233c.cn/2021/12/02/0dd74ca49341a.png" alt="image-20211202214619463"></p><p>经过尝试发现密码是这句话去掉空格，然后直接用gus用户进wordpress后台</p><p><img src="https://i.233c.cn/2021/12/02/a1e2715e18065.png" alt="image-20211202214743495"></p><p>这时候顺便回头看了眼wpscan扫描结果，最新版的wordpress，不用想了，不过已经进后台了那也不用管了</p><p><img src="https://i.233c.cn/2021/12/03/81bbbceacd6ce.png" alt="image-20211203171551618"></p><p>随便找个可以写php的地方，直接弹shell吧，经过测试直接执行弹shell命令无效，所以我这里写入文件之后再执行<img src="https://i.233c.cn/2021/12/03/5535de834259a.png" alt="image-20211203171714655"></p><p>访问刚刚更改的php文件，反弹成功</p><p><img src="https://i.233c.cn/2021/12/03/ec13b0d2780b7.png" alt="image-20211203171853259"></p><h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><p>随便翻翻，gus目录下发现两个可疑文件，那个user.txt里面有一串疑似flag的东西</p><p><img src="https://i.233c.cn/2021/12/03/c093049c15971.png" alt="image-20211203175206428"></p><p>再去黑客的用户目录下看看，发现了他的ssh私钥</p><p><img src="https://i.233c.cn/2021/12/03/97ee1d6dee6ab.png" alt="image-20211203175331981"></p><p>把私钥保存下来，尝试导入xshell发现需要密码，这时候只能试试爆破了</p><p><img src="https://i.233c.cn/2021/12/03/0dab3cd0a0a0e.png" alt="image-20211203182419980"></p><p>我们使用john工具来爆破密码，这里需要用到一个脚本(<a href="https://github.com/openwall/john/blob/bleeding-jumbo/run/ssh2john.py">链接</a>)把id_rsa私钥转成john能识别的格式，然后john直接爆破就行，然后密码竟然就是password…</p><p><img src="https://i.233c.cn/2021/12/03/5c15c4f55b238.png" alt="image-20211203184314880"></p><p>然后直接ssh连上去，sudo试探一下，果然没权限，革命尚未成功，同志仍需努力啊</p><p><img src="https://i.233c.cn/2021/12/03/6a73325c53305.png" alt="image-20211203184443438"></p><p>熟练的找下suid提权，emmm，一无所获，看来suid提权走不通</p><p><img src="https://i.233c.cn/2021/12/03/bf4913941c1e5.png" alt="image-20211203184818430"></p><p>突然想到之前badbyte用户下面有几个打不开的文件，果然，有好东西</p><p><img src="https://i.233c.cn/2021/12/03/72f0a8556ee8b.png" alt="image-20211203185504521"></p><p>黑客前几条命令是在改网站，看后面几条，疑似提权，跟着操作一下，直接拿到root权限</p><p><img src="https://i.233c.cn/2021/12/03/2d8240bbd6d16.png" alt="image-20211203185628303"></p><p>到这里，这个靶机算是完成了</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个靶机还是比较基础了，并没有什么高度操作，总的来说还是自己太菜了，中途看了几次wp才做完</p><p>好了，准备开下一个，各位再见</p><p><img src="https://i.233c.cn/2021/12/03/d8e95e4ed8a6a.webp" alt="get_thumbnail"></p>]]></content>
     
