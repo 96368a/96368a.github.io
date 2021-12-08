@@ -18,7 +18,7 @@
   <meta name="author" content="木末君">
   <meta name="keywords" content="个人博客,编程,玩机,脚本,网安">
   
-  <title>vulnhub系列之MOMENTUM：1 - 木末の小站 - 奇思妙想之处</title>
+  <title>vulnhub系列之MOMENTUM - 木末の小站 - 奇思妙想之处</title>
 <meta name="google-site-verification" content="KTQzSfNVTTA03-U0E7Md8pBPstQXd95hswuVwkXmRWY" />
 <meta name="msvalidate.01" content="CFF6F664650ABB7467B83086E0554A8A" />
   <link  rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
@@ -177,7 +177,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="vulnhub系列之MOMENTUM：1">
+            <span class="h2" id="subtitle" title="vulnhub系列之MOMENTUM">
               
             </span>
 
@@ -199,7 +199,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      419 字
+      935 字
     </span>
   
 
@@ -209,7 +209,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      9
        分钟
     </span>
   
@@ -247,13 +247,13 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">vulnhub系列之MOMENTUM：1</h1>
+            <h1 style="display: none">vulnhub系列之MOMENTUM</h1>
             
             <div class="markdown-body">
-              <h1 id="vulnhub系列之MOMENTUM-1"><a href="#vulnhub系列之MOMENTUM-1" class="headerlink" title="vulnhub系列之MOMENTUM: 1"></a>vulnhub系列之MOMENTUM: 1</h1><blockquote>
+              <h1 id="vulnhub系列之MOMENTUM"><a href="#vulnhub系列之MOMENTUM" class="headerlink" title="vulnhub系列之MOMENTUM"></a>vulnhub系列之MOMENTUM</h1><blockquote>
 <p>环境搭建直接略过，vbox桥接没什么好说的</p>
 </blockquote>
-<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>老一套没什么好说的，直接奔网页去就完了</p>
+<h2 id="MOMENTUM-1"><a href="#MOMENTUM-1" class="headerlink" title="MOMENTUM: 1"></a>MOMENTUM: 1</h2><h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><p>老一套没什么好说的，直接奔网页去就完了</p>
 <p><img src="https://i.233c.cn/2021/12/07/9dc618b84443a.png" srcset="/img/loading.gif" lazyload alt="image-20211207195546751"></p>
 <p>网页端比较简陋</p>
 <p><img src="https://i.233c.cn/2021/12/07/1e82ee2b4c2ad.png" srcset="/img/loading.gif" lazyload alt="image-20211207203511094"></p>
@@ -265,13 +265,13 @@
 <p><img src="https://i.233c.cn/2021/12/07/c72e23ad5a62f.png" srcset="/img/loading.gif" lazyload alt="image-20211207203944741"></p>
 <p>随便翻翻，在js文件里发现一些注释以后的代码，是个aes解密，先把密钥记下来</p>
 <p><img src="https://i.233c.cn/2021/12/07/328a34f896719.png" srcset="/img/loading.gif" lazyload alt="image-20211207204102489"></p>
-<h2 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h2><p>到这我就卡住了，目前已有的线索似乎连不起来，等等，xss会不会是个提示，去cookie看看，有个这玩意</p>
+<h3 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h3><p>到这我就卡住了，目前已有的线索似乎连不起来，等等，xss会不会是个提示，去cookie看看，有个这玩意</p>
 <p><img src="https://i.233c.cn/2021/12/07/9b9481b0c925b.png" srcset="/img/loading.gif" lazyload alt="image-20211207204656533"></p>
 <p>emmm，还是不知道有啥用，看wp发现原来是用之前拿到的密钥aes解密一下，得到这个，盲猜是ssh账号密码</p>
 <p><img src="https://i.233c.cn/2021/12/07/099f0b34f32d3.png" srcset="/img/loading.gif" lazyload alt="image-20211207205641848"></p>
 <p>然后，在我怀疑人生的时候，我终于试出了账号是auxerre，密码auxerre-alienum##的ssh用户</p>
 <p><img src="https://i.233c.cn/2021/12/07/e64d5c8942d3f.png" srcset="/img/loading.gif" lazyload alt="image-20211207205816817"></p>
-<h2 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h2><p>老规矩试探一下suid提权，果然没戏</p>
+<h3 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h3><p>老规矩试探一下suid提权，果然没戏</p>
 <p><img src="https://i.233c.cn/2021/12/07/0f67b79bca5e8.png" srcset="/img/loading.gif" lazyload alt="image-20211207211929041"></p>
 <p>用新漏洞提权就太没意思了，先找找看有没有什么线索，然而文件里啥线索都没发现，倒是发现一个flag</p>
 <p><img src="https://i.233c.cn/2021/12/07/91dac8105f15a.png" srcset="/img/loading.gif" lazyload alt="image-20211207212106515"></p>
@@ -285,7 +285,44 @@
 <p><img src="https://www.mcmod.cn/pages/tools/achievements/images/achievements/24789_xWwWIXbu.png" srcset="/img/loading.gif" lazyload></p>
 <p>是的，结束了…</p>
 <p><img src="https://i.233c.cn/2021/12/07/090cc2bcb066c.png" srcset="/img/loading.gif" lazyload alt="image-20211207213607930"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>非常简单的一个靶机，没啥好说的</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>非常简单的一个靶机，没啥好说的,趁热打铁把第二个也刷了吧</p>
+<h2 id="MOMENTUM-2"><a href="#MOMENTUM-2" class="headerlink" title="MOMENTUM: 2"></a>MOMENTUM: 2</h2><h3 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h3><p>端口扫描没什么好说的</p>
+<p><img src="https://i.233c.cn/2021/12/08/d43725725d476.png" srcset="/img/loading.gif" lazyload alt="image-20211208104830947"></p>
+<p>目录扫描，manual直接略过不看</p>
+<p><img src="https://i.233c.cn/2021/12/08/e051835591356.png" srcset="/img/loading.gif" lazyload alt="image-20211208105005790"></p>
+<p>主站长这样，这回图片不可以交互了，但是问题不大</p>
+<p><img src="https://i.233c.cn/2021/12/08/e513aec001422.png" srcset="/img/loading.gif" lazyload alt="image-20211208121842875"></p>
+<p>js目录遍历有个main.js,疑似上传点</p>
+<p><img src="https://i.233c.cn/2021/12/08/1ab78d31000db.png" srcset="/img/loading.gif" lazyload alt="image-20211208122002877"></p>
+<h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><p>我猜有个表单页面，但是我找不到，问题不大，自己构造一个就行了</p>
+<p><img src="https://i.233c.cn/2021/12/08/de9156e1ed35a.png" srcset="/img/loading.gif" lazyload alt="image-20211208122436155"></p>
+<p>经过不断尝试我发现只能上传txt文件</p>
+<p><img src="https://i.233c.cn/2021/12/08/67846200c29ee.png" srcset="/img/loading.gif" lazyload alt="image-20211208122309695"></p>
+<p>这里卡了至少半个小时，上传死活绕不过，没办法，看wp吧</p>
+<p>原来是这个页面有个备份，那估计就是源码审计了</p>
+<p><img src="https://i.233c.cn/2021/12/08/cd379d9060adc.png" srcset="/img/loading.gif" lazyload alt="image-20211208134055732"></p>
+<p>有个cookie验证和参数验证，cookie看注释好像还少一位，得爆破一下</p>
+<p><img src="https://i.233c.cn/2021/12/08/f63bf2102a5ac.png" srcset="/img/loading.gif" lazyload alt="image-20211208134144498"></p>
+<p>上传成功了，爆破结果不太好过滤，手动看了一下是缺一位R</p>
+<p><img src="https://i.233c.cn/2021/12/08/38d867a1710dd.png" srcset="/img/loading.gif" lazyload alt="image-20211208135411032"></p>
+<p><img src="https://i.233c.cn/2021/12/08/e01b9d3c79768.png" srcset="/img/loading.gif" lazyload alt="image-20211208140017316"></p>
+<p><img src="https://i.233c.cn/2021/12/08/4efc7e140ab08.png" srcset="/img/loading.gif" lazyload alt="image-20211208135858444"></p>
+<p>能上传了就直接nc反弹shell，上去后在用户目录下拿到了第一个flag</p>
+<p><img src="https://i.233c.cn/2021/12/08/4cf939a0a3db5.png" srcset="/img/loading.gif" lazyload alt="image-20211208140205734"></p>
+<h3 id="权限提升-1"><a href="#权限提升-1" class="headerlink" title="权限提升"></a>权限提升</h3><p>另外一个用户目录下面也发现一些好东西，这个python脚本疑似可以提权</p>
+<p><img src="https://i.233c.cn/2021/12/08/dfcdf09d16884.png" srcset="/img/loading.gif" lazyload alt="image-20211208140746826"></p>
+<p>仔细分析发现这里应该有个命令拼接，输入的seed值最终会被传入命令行打印出来</p>
+<p><img src="https://i.233c.cn/2021/12/08/0aebc21672f3c.png" srcset="/img/loading.gif" lazyload alt="image-20211208141109818"></p>
+<p>这里要密码才能sudo，但估计有密码也不行，没权限</p>
+<p><img src="https://i.233c.cn/2021/12/08/d2522b61e8852.png" srcset="/img/loading.gif" lazyload alt="image-20211208145717197"></p>
+<p>到这里思路彻底卡住了，没办法，看wp吧，中级难度的对我来说还是太勉强了</p>
+<p>这里有个告诉了个账号密码，提权要登上这个账号才能进行，账号athena，密码myvulnerableapp*，不知道为什么的可以搜一下Asterisk这个单词的意思</p>
+<p><img src="https://i.233c.cn/2021/12/08/c02dff3768247.png" srcset="/img/loading.gif" lazyload alt="image-20211208150457165"></p>
+<p>上来以后用之前找到的那个脚本提权（这里为什么能提权没整明白。包括sudo为什么不用输入密码）</p>
+<p><img src="https://i.233c.cn/2021/12/08/b54c56c874b59.png" srcset="/img/loading.gif" lazyload alt="image-20211208151146858"></p>
+<p>到此为止了</p>
+<p><img src="https://i.233c.cn/2021/12/08/ca9aae282e819.png" srcset="/img/loading.gif" lazyload alt="image-20211208151237882"></p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>难度算是中规中矩。主要还是要注意细节，像是文件上传页面的备份，用户目录下的提示什么的，还是不能根据经验来做题。这样子会陷入死胡同</p>
 
             </div>
             <hr>
