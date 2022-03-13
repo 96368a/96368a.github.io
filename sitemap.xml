@@ -2,15 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://blog.233c.cn/posts/10009/</loc>
-    
-    <lastmod>2022-03-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://blog.233c.cn/posts/10008/</loc>
     
     <lastmod>2021-12-08</lastmod>
@@ -315,34 +306,6 @@
   
   <url>
     <loc>http://blog.233c.cn/tags/kernel/</loc>
-    <lastmod>2022-03-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.233c.cn/tags/%E6%8A%93%E5%8C%85/</loc>
-    <lastmod>2022-03-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.233c.cn/tags/%E9%80%86%E5%90%91/</loc>
-    <lastmod>2022-03-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.233c.cn/tags/%E5%B0%8F%E7%B1%B3/</loc>
-    <lastmod>2022-03-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.233c.cn/tags/%E5%B0%8F%E7%88%B1%E5%90%8C%E5%AD%A6/</loc>
     <lastmod>2022-03-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
