@@ -18,7 +18,7 @@
   <meta name="author" content="木末君">
   <meta name="keywords" content="个人博客,编程,玩机,脚本,网安">
   
-  <title>网站加载速度优化指北 - 木末の小站 - 奇思妙想之处</title>
+  <title>记一次小爱音箱折腾 - 木末の小站 - 奇思妙想之处</title>
 <meta name="google-site-verification" content="KTQzSfNVTTA03-U0E7Md8pBPstQXd95hswuVwkXmRWY" />
 <meta name="msvalidate.01" content="CFF6F664650ABB7467B83086E0554A8A" />
   <link  rel="stylesheet" href="https://cdn.staticfile.org/bootstrap/4.5.3/css/bootstrap.min.css" />
@@ -172,12 +172,12 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('https://img30.360buyimg.com/pop/jfs/t1/180735/10/5101/352844/60a654f4E56b569d3/d0a950eb33f6bfa8.jpg') no-repeat center center;
+         style="background: url('https://api.ghser.com/random/pc.php') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="网站加载速度优化指北">
+            <span class="h2" id="subtitle" title="记一次小爱音箱折腾">
               
             </span>
 
@@ -187,8 +187,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-20 16:04" pubdate>
-        2021年5月20日 下午
+      <time datetime="2022-02-10 22:33" pubdate>
+        2022年2月10日 晚上
       </time>
     </span>
   
@@ -199,7 +199,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      616 字
+      13 字
     </span>
   
 
@@ -209,7 +209,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      1
        分钟
     </span>
   
@@ -247,44 +247,10 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">网站加载速度优化指北</h1>
+            <h1 style="display: none">记一次小爱音箱折腾</h1>
             
             <div class="markdown-body">
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因为没钱，所以博客用的免费的github pages，但是github pages这速度，真的是一言难尽，所以决定从网站结构的角度出发，来尽可能的优化一下网站的加载速度</p>
-<h1 id="网站静态资源优化"><a href="#网站静态资源优化" class="headerlink" title="网站静态资源优化"></a>网站静态资源优化</h1><h2 id="一、公共库优化"><a href="#一、公共库优化" class="headerlink" title="一、公共库优化"></a>一、公共库优化</h2><p>以我的博客为例子，随便打开一篇文章，然后打开谷歌浏览器的调试工具，切换到网络选项，Ctrl+F5强制刷新一下，然后等待加载完成，把结果按时间排序</p>
-<p><img src="https://pic.imgdb.cn/item/60a62bd16ae4f77d356b2d23.png" srcset="/img/loading.gif" lazyload alt="优化前加载时间"></p>
-<p>先从加载时间过长的外部资源入手，比如说bootstrap、jquery这种库，</p>
-<p>我这个主题默认用的是<a target="_blank" rel="noopener" href="https://www.jsdelivr.com/" title="jsdelivr">jsdelivr</a>，可以换成国内的<a target="_blank" rel="noopener" href="https://www.bootcdn.cn/" title="bootcdn">bootcdn</a>或者<a target="_blank" rel="noopener" href="https://cdn.baomitu.com/" title="baomitu">baomitu</a></p>
-<p><img src="https://pic.imgdb.cn/item/60a62d216ae4f77d3571edc2.png" srcset="/img/loading.gif" lazyload alt="静态资源分析"></p>
-<p>更换为bootcdn之后<br><img src="https://pic.imgdb.cn/item/60a6378c6ae4f77d35aaddb5.png" srcset="/img/loading.gif" lazyload alt="bootcdn加速"></p>
-<p><img src="https://pic.imgdb.cn/item/60a637576ae4f77d35a9e544.png" srcset="/img/loading.gif" lazyload alt="bootcdn加载"></p>
-<p>可以看到加速时间是快了很多的</p>
-<h2 id="二、图片优化"><a href="#二、图片优化" class="headerlink" title="二、图片优化"></a>二、图片优化</h2><p>公共库的优化搞定了之后，我们再来看看图片</p>
-<p><img src="https://pic.imgdb.cn/item/60a640e46ae4f77d35dbc245.png" srcset="/img/loading.gif" lazyload></p>
-<p>这加载时间实在是惨不忍睹，主要有两个优化方向</p>
-<h3 id="1-图片压缩"><a href="#1-图片压缩" class="headerlink" title="1.图片压缩"></a>1.图片压缩</h3><p>第一选择当然从根源入手了，想办法把图片文件的大小缩小不就好了，这里推荐两个图片在线压缩网站</p>
-<h4 id="1-tinypng"><a href="#1-tinypng" class="headerlink" title="1.tinypng"></a>1.<a target="_blank" rel="noopener" href="https://tinypng.com/" title="tinypng">tinypng</a></h4><p><img src="https://pic.imgdb.cn/item/60a643526ae4f77d35e93d02.png" srcset="/img/loading.gif" lazyload alt="tinypng"></p>
-<h4 id="2-docsmall"><a href="#2-docsmall" class="headerlink" title="2.docsmall"></a>2.<a target="_blank" rel="noopener" href="https://docsmall.com/image-compress" title="docsmall">docsmall</a></h4><p><img src="https://pic.imgdb.cn/item/60a643bf6ae4f77d35eb7d76.png" srcset="/img/loading.gif" lazyload alt="docsmall"></p>
-<p>这一类网站一搜一大把，压缩效果其实也差不多，至于选择用哪一个，那就仁者见仁，智者见智了，我最常用的是<a target="_blank" rel="noopener" href="https://tinypng.com/" title="tinypng">tinypng</a>。</p>
-<h3 id="图床"><a href="#图床" class="headerlink" title="图床"></a>图床</h3><p>如果可以，最好把图片和网站分开存放，不要过于相信你的服务器，反正网上的图床也是一搜一大把，找个带cdn的图床岂不美哉？</p>
-<p>烂大街的像<a target="_blank" rel="noopener" href="https://imgurl.org/" title="ImgURL">ImgURL</a>、<a target="_blank" rel="noopener" href="https://sm.ms/" title="SM.MS">SM.MS</a>、<a target="_blank" rel="noopener" href="https://imgtu.com/" title="路过图床">路过图床</a>这种我就不说了，我推荐几个小众的吧(跑路警告)</p>
-<p><del>1.<a target="_blank" rel="noopener" href="https://www.superbed.cn/" title="聚合图床">聚合图床</a></del></p>
-<p><del>这玩意也是我的主力</del><br>这狗玩意免费接口竟然也是抓的第三方…<br>啥接口都用，还不如第三个..，起码还能自己选一个快的</p>
-<p>2.<a target="_blank" rel="noopener" href="https://kjava.com/" title="酷Java图床">酷Java图床</a><br>v2ex看到的，速度还行</p>
-<p>3.<a target="_blank" rel="noopener" href="https://pic.onji.cn/" title="映画の图床">映画の图床</a><br>非自建图床，是位v友抓的大厂的接口，图片上传无法删除，而且存在一定风险(参考新浪图床防盗链事件)</p>
-<p>4.新增其他</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://img.so/">https://img.so/</a></li>
-<li><a target="_blank" rel="noopener" href="https://imgbb.com/">https://imgbb.com/</a></li>
-<li><a target="_blank" rel="noopener" href="https://youjb.com/">https://youjb.com/</a></li>
-<li><a target="_blank" rel="noopener" href="https://img.gejiba.com/">https://img.gejiba.com/</a></li>
-</ul>
-<blockquote>
-<p>说明</p>
-</blockquote>
-<p>公开图床存在跑路风险，自建图床怕被刷流量，至于Github+jsDelivr当图床，我并不赞成，而且速度也不咋地</p>
-<h2 id="三-CDN"><a href="#三-CDN" class="headerlink" title="三.CDN"></a>三.CDN</h2><p>还在试验，暂时没上</p>
-<p>未完待续…</p>
+              <h1 id="记一次小爱音箱折腾"><a href="#记一次小爱音箱折腾" class="headerlink" title="记一次小爱音箱折腾"></a>记一次小爱音箱折腾</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>小爱</p>
 
             </div>
             <hr>
@@ -294,7 +260,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E7%BD%91%E7%AB%99/">网站</a>
+                      <a class="hover-with-bg" href="/categories/%E6%9D%82%E6%8A%80%E6%B5%85%E5%B0%9D/">杂技浅尝</a>
                     
                   </div>
                 
@@ -302,11 +268,13 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E7%BD%91%E7%AB%99/">网站</a>
+                      <a class="hover-with-bg" href="/tags/%E6%8A%93%E5%8C%85/">抓包</a>
                     
-                      <a class="hover-with-bg" href="/tags/cdn/">cdn</a>
+                      <a class="hover-with-bg" href="/tags/%E9%80%86%E5%90%91/">逆向</a>
                     
-                      <a class="hover-with-bg" href="/tags/%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90/">静态资源</a>
+                      <a class="hover-with-bg" href="/tags/%E5%B0%8F%E7%B1%B3/">小米</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%B0%8F%E7%88%B1%E5%90%8C%E5%AD%A6/">小爱同学</a>
                     
                   </div>
                 
@@ -323,18 +291,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/10001/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">网上冲(an)浪(quan)必备知识</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/56936/">
-                        <span class="hidden-mobile">记一次linux内核编译</span>
+                      <a href="/posts/10008/">
+                        <span class="hidden-mobile">vulnhub系列之MOMENTUM</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
