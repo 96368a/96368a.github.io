@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://blog.233c.cn/posts/10010/</loc>
+    <lastmod>2022-04-23</lastmod>
+  </url>
+  <url>
+    <loc>http://blog.233c.cn/posts/10005/</loc>
+    <lastmod>2022-03-13</lastmod>
+  </url>
+  <url>
     <loc>http://blog.233c.cn/posts/10008/</loc>
     <lastmod>2021-12-08</lastmod>
   </url>
@@ -15,10 +23,6 @@
   <url>
     <loc>http://blog.233c.cn/posts/10001/</loc>
     <lastmod>2021-11-23</lastmod>
-  </url>
-  <url>
-    <loc>http://blog.233c.cn/posts/10005/</loc>
-    <lastmod>2021-10-16</lastmod>
   </url>
   <url>
     <loc>http://blog.233c.cn/posts/10003/</loc>
