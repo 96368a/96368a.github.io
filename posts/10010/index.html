@@ -31,7 +31,15 @@
     
     
       
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.7.2/styles/github-gist.min.css" />
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.staticfile.org/prism/1.27.0/components/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.staticfile.org/prism/1.27.0/components/plugins/line-numbers/prism-line-numbers.min.css" />
+      
     
   
 
@@ -209,7 +217,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21
+      20
        分钟
     </span>
   
@@ -294,7 +302,9 @@
 <p>这是由于github采用了pjax，然后pjax的地址并没有被替换成镜像地址导致的，我们可以通过nginx的配置来解决</p>
 <p>回到宝塔面板，打开反向代理配置文件（站点设置-反向代理-配置文件）</p>
 <p>将下面两行加入配置文件</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nginx">   <span class="hljs-comment">#解决pjax问题</span><br><span class="hljs-attribute">proxy_hide_header</span> x-pjax-url;<br><span class="hljs-attribute">add_header</span> x-pjax-url <span class="hljs-string">&quot;https://7mm.top<span class="hljs-variable">$request_uri</span>&quot;</span>;<br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx">   <span class="token comment">#解决pjax问题</span>
+<span class="token directive"><span class="token keyword">proxy_hide_header</span> x-pjax-url</span><span class="token punctuation">;</span>
+<span class="token directive"><span class="token keyword">add_header</span> x-pjax-url <span class="token string">"https://7mm.top<span class="token variable">$request_uri</span>"</span></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div>
 
 
 
@@ -312,17 +322,129 @@
 <p>将<code>//raw.githubassets.com</code>替换为我们的raw镜像站</p>
 <p><img src="https://i.233c.cn/2022/04/23/2aa60bacffdea.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2022-04-23_10-42-40"></p>
 <p>再打开反代配置文件，添加一行</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">add_header</span> x-pjax-url <span class="hljs-string">&quot;https://7mm.top<span class="hljs-variable">$request_uri</span>&quot;</span>;<br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">add_header</span> x-pjax-url <span class="token string">"https://7mm.top<span class="token variable">$request_uri</span>"</span></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
 
 <p><img src="https://i.233c.cn/2022/04/23/4de3563fa77e1.png" srcset="/img/loading.gif" lazyload alt="修改配置文件"></p>
 <p>至此，镜像站点的搭建已经完成，enjoy!</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>github.com</code>镜像nginx配置文件</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">server</span> &#123;<br>    <span class="hljs-attribute">listen</span> <span class="hljs-number">80</span>;<br>    <span class="hljs-attribute">listen</span> <span class="hljs-number">443</span> ssl http2;<br>    <span class="hljs-attribute">server_name</span> xxx.top;<br>    <span class="hljs-attribute">index</span> index.php index.html index.htm default.php default.htm default.html;<br><br><br>    <span class="hljs-comment">#SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则</span><br>    <span class="hljs-attribute">ssl_certificate</span> /www/server/panel/vhost/cert/7mm.top/fullchain.pem;<br>    <span class="hljs-attribute">ssl_certificate_key</span> /www/server/panel/vhost/cert/7mm.top/privkey.pem;<br>    <span class="hljs-attribute">ssl_protocols</span> TLSv1.<span class="hljs-number">1</span> TLSv1.<span class="hljs-number">2</span> TLSv1.<span class="hljs-number">3</span>;<br>    <span class="hljs-attribute">ssl_ciphers</span> EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;<br>    <span class="hljs-attribute">ssl_prefer_server_ciphers</span> <span class="hljs-literal">on</span>;<br>    <span class="hljs-attribute">ssl_session_cache</span> shared:SSL:<span class="hljs-number">10m</span>;<br>    <span class="hljs-attribute">ssl_session_timeout</span> <span class="hljs-number">10m</span>;<br>    <span class="hljs-attribute">add_header</span> Strict-Transport-Security <span class="hljs-string">&quot;max-age=31536000&quot;</span>;<br>    <span class="hljs-attribute">error_page</span> <span class="hljs-number">497</span> https://<span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>;<br><br><br>    <span class="hljs-section">location</span> <span class="hljs-regexp">~ /purge(/.*)</span> &#123;<br>        <span class="hljs-attribute">proxy_cache_purge</span> cache_one <span class="hljs-variable">$host</span><span class="hljs-variable">$1</span><span class="hljs-variable">$is_args</span><span class="hljs-variable">$args</span>;<br>        <span class="hljs-comment">#access_log  /www/wwwlogs/7mm.top_purge_cache.log;</span><br>    &#125;<br>    <span class="hljs-comment">#反代配置</span><br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> / &#123;<br>        <span class="hljs-attribute">proxy_pass</span> https://github.com;<br>        <span class="hljs-attribute">proxy_set_header</span> Host github.com;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Real-IP <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Forwarded-For <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> REMOTE-HOST <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">add_header</span> X-Cache <span class="hljs-variable">$upstream_cache_status</span>;<br>        <span class="hljs-comment">#Set Nginx Cache</span><br><br>        <span class="hljs-comment">#解决pjax问题</span><br>        <span class="hljs-attribute">proxy_hide_header</span> x-pjax-url;<br>        <span class="hljs-attribute">add_header</span> x-pjax-url <span class="hljs-string">&quot;https://7mm.top<span class="hljs-variable">$request_uri</span>&quot;</span>;<br><br>        <span class="hljs-comment">#raw替换</span><br>        <span class="hljs-attribute">proxy_redirect</span> https://raw.githubusercontent.com https://raw.7mm.top;<br><br>        <span class="hljs-attribute">proxy_set_header</span> Accept-Encoding <span class="hljs-string">&quot;&quot;</span>;<br><br>        <span class="hljs-attribute">sub_filter_once</span> <span class="hljs-literal">off</span>;<br><br>        <span class="hljs-attribute">sub_filter</span> <span class="hljs-string">&quot;//github.com&quot;</span> <span class="hljs-string">&quot;//7mm.top&quot;</span>;<br>        <span class="hljs-attribute">sub_filter</span> <span class="hljs-string">&quot;//raw.githubassets.com&quot;</span> <span class="hljs-string">&quot;//raw.7mm.top&quot;</span>;<br><br>        <span class="hljs-attribute">set</span> <span class="hljs-variable">$static_filexskBQvHR</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-attribute">if</span> ( <span class="hljs-variable">$uri</span> <span class="hljs-regexp">~* &quot;\.(gif|png|jpg|css|js|woff|woff2)$&quot;</span> ) &#123;<br>            <span class="hljs-attribute">set</span> <span class="hljs-variable">$static_filexskBQvHR</span> <span class="hljs-number">1</span>;<br>            <span class="hljs-attribute">expires</span> <span class="hljs-number">12h</span>;<br>        &#125;<br>        <span class="hljs-attribute">if</span> ( <span class="hljs-variable">$static_filexskBQvHR</span> = <span class="hljs-number">0</span> ) &#123;<br>            <span class="hljs-attribute">add_header</span> Cache-Control <span class="hljs-literal">no</span>-cache;<br>        &#125;<br>    &#125;<br><br><br>    <span class="hljs-attribute">access_log</span> /www/wwwlogs/7mm.top.log;<br>    <span class="hljs-attribute">error_log</span> /www/wwwlogs/7mm.top.<span class="hljs-literal">error</span>.log;<br>&#125;<br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span>
+    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">443</span> ssl http2</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">server_name</span> xxx.top</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">index</span> index.php index.html index.htm default.php default.htm default.html</span><span class="token punctuation">;</span>
+
+
+    <span class="token comment">#SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则</span>
+    <span class="token directive"><span class="token keyword">ssl_certificate</span> /www/server/panel/vhost/cert/7mm.top/fullchain.pem</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_certificate_key</span> /www/server/panel/vhost/cert/7mm.top/privkey.pem</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_protocols</span> TLSv1.1 TLSv1.2 TLSv1.3</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_ciphers</span> EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_prefer_server_ciphers</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_session_cache</span> shared:SSL:10m</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_session_timeout</span> <span class="token number">10m</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">add_header</span> Strict-Transport-Security <span class="token string">"max-age=31536000"</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">error_page</span> <span class="token number">497</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span>
+
+
+    <span class="token directive"><span class="token keyword">location</span> ~ /purge(/.*)</span> <span class="token punctuation">&#123;</span>
+        <span class="token directive"><span class="token keyword">proxy_cache_purge</span> cache_one <span class="token variable">$host</span><span class="token variable">$1</span><span class="token variable">$is_args</span><span class="token variable">$args</span></span><span class="token punctuation">;</span>
+        <span class="token comment">#access_log  /www/wwwlogs/7mm.top_purge_cache.log;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">#反代配置</span>
+    <span class="token directive"><span class="token keyword">location</span> ^~ /</span> <span class="token punctuation">&#123;</span>
+        <span class="token directive"><span class="token keyword">proxy_pass</span> https://github.com</span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> Host github.com</span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Real-IP <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> REMOTE-HOST <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">add_header</span> X-Cache <span class="token variable">$upstream_cache_status</span></span><span class="token punctuation">;</span>
+        <span class="token comment">#Set Nginx Cache</span>
+
+        <span class="token comment">#解决pjax问题</span>
+        <span class="token directive"><span class="token keyword">proxy_hide_header</span> x-pjax-url</span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">add_header</span> x-pjax-url <span class="token string">"https://7mm.top<span class="token variable">$request_uri</span>"</span></span><span class="token punctuation">;</span>
+
+        <span class="token comment">#raw替换</span>
+        <span class="token directive"><span class="token keyword">proxy_redirect</span> https://raw.githubusercontent.com https://raw.7mm.top</span><span class="token punctuation">;</span>
+
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> Accept-Encoding <span class="token string">""</span></span><span class="token punctuation">;</span>
+
+        <span class="token directive"><span class="token keyword">sub_filter_once</span> <span class="token boolean">off</span></span><span class="token punctuation">;</span>
+
+        <span class="token directive"><span class="token keyword">sub_filter</span> <span class="token string">"//github.com"</span> <span class="token string">"//7mm.top"</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">sub_filter</span> <span class="token string">"//raw.githubassets.com"</span> <span class="token string">"//raw.7mm.top"</span></span><span class="token punctuation">;</span>
+
+        <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_filexskBQvHR</span> <span class="token number">0</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$uri</span> ~* <span class="token string">"\.(gif|png|jpg|css|js|woff|woff2)$"</span> )</span> <span class="token punctuation">&#123;</span>
+            <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_filexskBQvHR</span> <span class="token number">1</span></span><span class="token punctuation">;</span>
+            <span class="token directive"><span class="token keyword">expires</span> <span class="token number">12h</span></span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$static_filexskBQvHR</span> = <span class="token number">0</span> )</span> <span class="token punctuation">&#123;</span>
+            <span class="token directive"><span class="token keyword">add_header</span> Cache-Control no-cache</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+
+    <span class="token directive"><span class="token keyword">access_log</span> /www/wwwlogs/7mm.top.log</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">error_log</span> /www/wwwlogs/7mm.top.error.log</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
 
 
 
 <p><code>raw.githubusercontent</code>镜像nginx配置</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">server</span> &#123;<br>    <span class="hljs-attribute">listen</span> <span class="hljs-number">80</span>;<br>    <span class="hljs-attribute">listen</span> <span class="hljs-number">443</span> ssl http2;<br>    <span class="hljs-attribute">server_name</span> raw.xxx.top;<br><br>    <span class="hljs-comment">#SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则</span><br>    <span class="hljs-attribute">ssl_certificate</span> /www/server/panel/vhost/cert/7mm.top/fullchain.pem;<br>    <span class="hljs-attribute">ssl_certificate_key</span> /www/server/panel/vhost/cert/7mm.top/privkey.pem;<br>    <span class="hljs-attribute">ssl_protocols</span> TLSv1.<span class="hljs-number">1</span> TLSv1.<span class="hljs-number">2</span> TLSv1.<span class="hljs-number">3</span>;<br>    <span class="hljs-attribute">ssl_ciphers</span> EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;<br>    <span class="hljs-attribute">ssl_prefer_server_ciphers</span> <span class="hljs-literal">on</span>;<br>    <span class="hljs-attribute">ssl_session_cache</span> shared:SSL:<span class="hljs-number">10m</span>;<br>    <span class="hljs-attribute">ssl_session_timeout</span> <span class="hljs-number">10m</span>;<br>    <span class="hljs-attribute">add_header</span> Strict-Transport-Security <span class="hljs-string">&quot;max-age=31536000&quot;</span>;<br>    <span class="hljs-attribute">error_page</span> <span class="hljs-number">497</span> https://<span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>;<br><br><br>    <span class="hljs-section">location</span> <span class="hljs-regexp">~ /purge(/.*)</span> &#123;<br>        <span class="hljs-attribute">proxy_cache_purge</span> cache_one <span class="hljs-variable">$host</span><span class="hljs-variable">$1</span><span class="hljs-variable">$is_args</span><span class="hljs-variable">$args</span>;<br>    &#125;<br>    <span class="hljs-comment">#PROXY-START/</span><br><br>    <span class="hljs-comment">#raw反代配置</span><br>    <span class="hljs-section">location</span><span class="hljs-regexp"> ^~</span> / &#123;<br>        <span class="hljs-attribute">proxy_pass</span> https://raw.githubusercontent.com;<br>        <span class="hljs-attribute">proxy_set_header</span> Host raw.githubusercontent.com;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Real-IP <span class="hljs-variable">$remote_addr</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> X-Forwarded-For <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;<br>        <span class="hljs-attribute">proxy_set_header</span> REMOTE-HOST <span class="hljs-variable">$remote_addr</span>;<br><br>        <span class="hljs-attribute">add_header</span> X-Cache <span class="hljs-variable">$upstream_cache_status</span>;<br><br>        <span class="hljs-comment">#proxy_hide_header content-security-policy;</span><br>        <span class="hljs-comment">#proxy_hide_header Strict-Transport-Security;</span><br>        <span class="hljs-comment">#proxy_hide_header set-cookie;</span><br>        <span class="hljs-comment">#proxy_hide_header x-pjax-url;</span><br><br>        <span class="hljs-comment">#Set Nginx Cache</span><br>        <span class="hljs-attribute">set</span> <span class="hljs-variable">$static_fileHDokVEBC</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-attribute">if</span> ( <span class="hljs-variable">$uri</span> <span class="hljs-regexp">~* &quot;\.(gif|png|jpg|css|js|woff|woff2)$&quot;</span> ) &#123;<br>            <span class="hljs-attribute">set</span> <span class="hljs-variable">$static_fileHDokVEBC</span> <span class="hljs-number">1</span>;<br>            <span class="hljs-attribute">expires</span> <span class="hljs-number">12h</span>;<br>        &#125;<br>        <span class="hljs-attribute">if</span> ( <span class="hljs-variable">$static_fileHDokVEBC</span> = <span class="hljs-number">0</span> ) &#123;<br>            <span class="hljs-attribute">add_header</span> Cache-Control <span class="hljs-literal">no</span>-cache;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">#PROXY-END/</span><br><br>    <span class="hljs-attribute">access_log</span> /www/wwwlogs/7mm.top.log;<br>    <span class="hljs-attribute">error_log</span> /www/wwwlogs/7mm.top.<span class="hljs-literal">error</span>.log;<br>&#125;<br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span>
+    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">443</span> ssl http2</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">server_name</span> raw.xxx.top</span><span class="token punctuation">;</span>
+
+    <span class="token comment">#SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则</span>
+    <span class="token directive"><span class="token keyword">ssl_certificate</span> /www/server/panel/vhost/cert/7mm.top/fullchain.pem</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_certificate_key</span> /www/server/panel/vhost/cert/7mm.top/privkey.pem</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_protocols</span> TLSv1.1 TLSv1.2 TLSv1.3</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_ciphers</span> EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_prefer_server_ciphers</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_session_cache</span> shared:SSL:10m</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">ssl_session_timeout</span> <span class="token number">10m</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">add_header</span> Strict-Transport-Security <span class="token string">"max-age=31536000"</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">error_page</span> <span class="token number">497</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span>
+
+
+    <span class="token directive"><span class="token keyword">location</span> ~ /purge(/.*)</span> <span class="token punctuation">&#123;</span>
+        <span class="token directive"><span class="token keyword">proxy_cache_purge</span> cache_one <span class="token variable">$host</span><span class="token variable">$1</span><span class="token variable">$is_args</span><span class="token variable">$args</span></span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">#PROXY-START/</span>
+
+    <span class="token comment">#raw反代配置</span>
+    <span class="token directive"><span class="token keyword">location</span> ^~ /</span> <span class="token punctuation">&#123;</span>
+        <span class="token directive"><span class="token keyword">proxy_pass</span> https://raw.githubusercontent.com</span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> Host raw.githubusercontent.com</span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Real-IP <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">proxy_set_header</span> REMOTE-HOST <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>
+
+        <span class="token directive"><span class="token keyword">add_header</span> X-Cache <span class="token variable">$upstream_cache_status</span></span><span class="token punctuation">;</span>
+
+        <span class="token comment">#proxy_hide_header content-security-policy;</span>
+        <span class="token comment">#proxy_hide_header Strict-Transport-Security;</span>
+        <span class="token comment">#proxy_hide_header set-cookie;</span>
+        <span class="token comment">#proxy_hide_header x-pjax-url;</span>
+
+        <span class="token comment">#Set Nginx Cache</span>
+        <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_fileHDokVEBC</span> <span class="token number">0</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$uri</span> ~* <span class="token string">"\.(gif|png|jpg|css|js|woff|woff2)$"</span> )</span> <span class="token punctuation">&#123;</span>
+            <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_fileHDokVEBC</span> <span class="token number">1</span></span><span class="token punctuation">;</span>
+            <span class="token directive"><span class="token keyword">expires</span> <span class="token number">12h</span></span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$static_fileHDokVEBC</span> = <span class="token number">0</span> )</span> <span class="token punctuation">&#123;</span>
+            <span class="token directive"><span class="token keyword">add_header</span> Cache-Control no-cache</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">#PROXY-END/</span>
+
+    <span class="token directive"><span class="token keyword">access_log</span> /www/wwwlogs/7mm.top.log</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">error_log</span> /www/wwwlogs/7mm.top.error.log</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
 
 
             </div>
@@ -544,6 +666,8 @@
 
 
 
+  
+    
   
 
 

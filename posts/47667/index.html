@@ -31,7 +31,15 @@
     
     
       
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.7.2/styles/github-gist.min.css" />
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.staticfile.org/prism/1.27.0/components/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.staticfile.org/prism/1.27.0/components/plugins/line-numbers/prism-line-numbers.min.css" />
+      
     
   
 
@@ -199,7 +207,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      904 字
+      914 字
     </span>
   
 
@@ -279,7 +287,15 @@
 <p>所以我习惯建一个bin文件夹来专门存放编译后的exe文件<br>首先新建一个文件夹  </p>
 <p><img src="https://img.imgdb.cn/item/6049df235aedab222cfa5d56.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后分别编辑配置文件launch.json和tasks.json<br>配置变量参考:</p>
-<figure class="highlight plaintext"><figcaption><span>:表示当前workspace文件夹路径，也即/home/Coding/Test</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs $&#123;workspaceFolder&#125;">$&#123;workspaceRootFolderName&#125;:表示workspace的文件夹名，也即Test<br>$&#123;file&#125;:文件自身的绝对路径，也即/home/Coding/Test/.vscode/tasks.json<br>$&#123;relativeFile&#125;:文件在workspace中的路径，也即.vscode/tasks.json<br>$&#123;fileBasenameNoExtension&#125;:当前文件的文件名，不带后缀，也即tasks<br>$&#123;fileBasename&#125;:当前文件的文件名，tasks.json<br>$&#123;fileDirname&#125;:文件所在的文件夹路径，也即/home/Coding/Test/.vscode<br>$&#123;fileExtname&#125;:当前文件的后缀，也即.json<br>$&#123;lineNumber&#125;:当前文件光标所在的行号<br>$&#123;env:PATH&#125;:系统中的环境变量<br></code></pre></td></tr></table></figure>
+<div class="code-wrapper"><pre class="line-numbers language-$&#123;workspaceFolder&#125;" data-language="$&#123;workspaceFolder&#125;"><div class="caption"><span>:表示当前workspace文件夹路径，也即/home/Coding/Test</span></div><code class="language-$&#123;workspaceFolder&#125;">$&#123;workspaceRootFolderName&#125;:表示workspace的文件夹名，也即Test
+$&#123;file&#125;:文件自身的绝对路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode&#x2F;tasks.json
+$&#123;relativeFile&#125;:文件在workspace中的路径，也即.vscode&#x2F;tasks.json
+$&#123;fileBasenameNoExtension&#125;:当前文件的文件名，不带后缀，也即tasks
+$&#123;fileBasename&#125;:当前文件的文件名，tasks.json
+$&#123;fileDirname&#125;:文件所在的文件夹路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode
+$&#123;fileExtname&#125;:当前文件的后缀，也即.json
+$&#123;lineNumber&#125;:当前文件光标所在的行号
+$&#123;env:PATH&#125;:系统中的环境变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
 <p>我的变量为:</p>
 <blockquote>
 <p><code>$&#123;workspaceFolder&#125;\\bin\\$&#123;fileBasenameNoExtension&#125;.exe</code> //表示在当前工作区的bin文件夹下编译调试</p>
@@ -519,6 +535,8 @@
 
 
 
+  
+    
   
 
 
