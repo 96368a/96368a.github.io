@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>记一次Github镜像站搭建</title>
+    <link href="/posts/10010/"/>
+    <url>/posts/10010/</url>
+    
+    <content type="html"><![CDATA[<h1 id="记一次Github镜像站搭建"><a href="#记一次Github镜像站搭建" class="headerlink" title="记一次Github镜像站搭建"></a>记一次Github镜像站搭建</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>迫于github在国内日常打不开，以及我刚好有一台吃灰的香港vps，所以我决定自己建一个Github的镜像站。</p><p>虽然我日常开全局，几乎无缝访问Github，但是有时候需要在别人电脑上使用Github，所以建一个镜像站还是有必要的。</p><p>所以镜像站点搭建的前置条件是：</p><ul><li>一个能访问原站点的vps</li><li>一个域名</li></ul><h2 id="请求分析"><a href="#请求分析" class="headerlink" title="请求分析"></a>请求分析</h2><p>建镜像站之前，我们首先要分析一下github的请求，这种大型网站的资源肯定是单独存放的，所以我们需要镜像的域名肯定不止一个。</p><p>打开开发者工具，访问github首页，在网络选项卡中可以看到加载的所有请求，我们可以一个一个查看域名，然后把不同的域名记下来就好了</p><p><img src="https://i.233c.cn/2022/04/23/aadab6c76965a.png" alt="Github请求资源"></p><p>当然，还有更快捷的方法，直接切换到源代码选项卡，忽略浏览器扩展加载的文件，其他的便是我们需要镜像的域名</p><p><img src="https://i.233c.cn/2022/04/23/f8a97cd32f467.png" alt="Github请求资源"></p><p>如图，一共请求了三个域名的资源</p><ul><li>github.com</li><li>github.githubassets.com</li><li>avatars.githubusercontent.com</li></ul><p>当然，这还只是首页请求的资源，其实另外还有几个资源域名，如githun的查看源文件的域名<code>raw.githubusercontent.com</code></p><p>但是，我们不一定需要镜像所有域名，因为有些域名并没有被墙 [doge]</p><p>我这里直接说结论，github被墙的域名只有下面两个罢</p><ul><li>github.com</li><li>raw.githubusercontent.com</li></ul><h2 id="镜像过程"><a href="#镜像过程" class="headerlink" title="镜像过程"></a>镜像过程</h2><h3 id="添加域名解析"><a href="#添加域名解析" class="headerlink" title="添加域名解析"></a>添加域名解析</h3><p>域名添加解析我就不多说了，我这边使用cloudflare管理域名，直接在cf添加A记录解析ip到vps即可，需要镜像几个域名就添加几条记录，当然你也可以添加泛解析</p><p><img src="https://i.233c.cn/2022/04/23/bb3fcff111413.png" alt="域名记录"></p><h3 id="nginx反代"><a href="#nginx反代" class="headerlink" title="nginx反代"></a>nginx反代</h3><p>说是镜像，其实就是利用了nginx的反代功能，</p><p>我这边图个方便直接装了宝塔面板</p><p>在宝塔面板里添加站点，域名填刚刚解析的域名，因为需要反代不同的站点，所以每个域名需要单独建一个站点。(<code>github.com</code>和<code>raw.githubusercontent.com</code>)</p><p><img src="https://i.233c.cn/2022/04/23/3f1cdfa7f5326.png" alt="Snipaste_2022-04-23_10-42-40"></p><p>添加完成之后点开设置，在<code>反向代理</code>选项卡中添加反向代理，将每个站点分别反代到不同的域名。</p><p>如图为反代到github域名的设置，注意目标url那里需要用<code>https://</code>，另外还需要添加一个内容替换，把<code>github.com</code>替换为<code>自己反代的域名</code>，把github的资源请求也指向镜像站</p><p><img src="https://i.233c.cn/2022/04/23/640ea2e11761c.png" alt="添加反代"></p><p><img src="https://i.233c.cn/2022/04/23/805f91e2baca5.png" alt="添加反向代理"></p><p>添加完成之后打开我们的镜像站，如果顺利的话，恭喜你，一个可以clone镜像站已经搭建完成了</p><p><img src="https://i.233c.cn/2022/04/23/e7b2f2b1b2d7b.png" alt="镜像网站"></p><p>随便打开一个项目，你会发现替换生效了，clone地址变成了你镜像的地址，而且这个地址是可用的，我就不演示了</p><p><img src="https://i.233c.cn/2022/04/23/2600def3ff89c.png" alt="项目"></p><p>clone镜像是搞定了，但是网页还是存在一些问题，随便点开项目中的一个文件，你会发现加载不出来，并且控制台报错了</p><p><img src="https://i.233c.cn/2022/04/23/afc62a892e450.png" alt="控制台报错"></p><p>这是由于github采用了pjax，然后pjax的地址并没有被替换成镜像地址导致的，我们可以通过nginx的配置来解决</p><p>回到宝塔面板，打开反向代理配置文件（站点设置-反向代理-配置文件）</p><p>将下面两行加入配置文件</p><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx">   <span class="token comment">#解决pjax问题</span><span class="token directive"><span class="token keyword">proxy_hide_header</span> x-pjax-url</span><span class="token punctuation">;</span><span class="token directive"><span class="token keyword">add_header</span> x-pjax-url <span class="token string">"https://7mm.top<span class="token variable">$request_uri</span>"</span></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div><p><img src="https://i.233c.cn/2022/04/23/00dc1ddc7580a.png" alt="反代配置"></p><p>现在pjax就没有问题了，可以随意打开项目文件了，至此镜像站已经完成了</p><p>等等，好像忘了什么，点开一个项目文件，再点击<code>raw</code>,你会发现访问不了</p><p>最后一步，我们来搭建raw的镜像</p><p>还是建立站点、添加反代</p><p><img src="https://i.233c.cn/2022/04/23/9c1d4cf29604d.png" alt="Snipaste_2022-04-23_10-42-40"></p><p>现在访问raw镜像站会跳转到github首页，</p><p>我们随便找个raw地址，将url中的<code>raw.githubusercontent.com</code>替换为镜像地址</p><p><img src="https://i.233c.cn/2022/04/23/9531781f9b39c.png" alt="raw镜像"></p><p>现在将我们github镜像站的raw只想我们的raw镜像站</p><p>修改github镜像站的反代设置，添加一个内容替换</p><p>将<code>//raw.githubassets.com</code>替换为我们的raw镜像站</p><p><img src="https://i.233c.cn/2022/04/23/2aa60bacffdea.png" alt="Snipaste_2022-04-23_10-42-40"></p><p>再打开反代配置文件，添加一行</p><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">add_header</span> x-pjax-url <span class="token string">"https://7mm.top<span class="token variable">$request_uri</span>"</span></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div><p><img src="https://i.233c.cn/2022/04/23/4de3563fa77e1.png" alt="修改配置文件"></p><p>至此，镜像站点的搭建已经完成，enjoy!</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>github.com</code>镜像nginx配置文件</p><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span>    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">443</span> ssl http2</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">server_name</span> xxx.top</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">index</span> index.php index.html index.htm default.php default.htm default.html</span><span class="token punctuation">;</span>    <span class="token comment">#SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则</span>    <span class="token directive"><span class="token keyword">ssl_certificate</span> /www/server/panel/vhost/cert/7mm.top/fullchain.pem</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_certificate_key</span> /www/server/panel/vhost/cert/7mm.top/privkey.pem</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_protocols</span> TLSv1.1 TLSv1.2 TLSv1.3</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_ciphers</span> EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_prefer_server_ciphers</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_session_cache</span> shared:SSL:10m</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_session_timeout</span> <span class="token number">10m</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">add_header</span> Strict-Transport-Security <span class="token string">"max-age=31536000"</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">error_page</span> <span class="token number">497</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">location</span> ~ /purge(/.*)</span> <span class="token punctuation">&#123;</span>        <span class="token directive"><span class="token keyword">proxy_cache_purge</span> cache_one <span class="token variable">$host</span><span class="token variable">$1</span><span class="token variable">$is_args</span><span class="token variable">$args</span></span><span class="token punctuation">;</span>        <span class="token comment">#access_log  /www/wwwlogs/7mm.top_purge_cache.log;</span>    <span class="token punctuation">&#125;</span>    <span class="token comment">#反代配置</span>    <span class="token directive"><span class="token keyword">location</span> ^~ /</span> <span class="token punctuation">&#123;</span>        <span class="token directive"><span class="token keyword">proxy_pass</span> https://github.com</span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> Host github.com</span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Real-IP <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> REMOTE-HOST <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">add_header</span> X-Cache <span class="token variable">$upstream_cache_status</span></span><span class="token punctuation">;</span>        <span class="token comment">#Set Nginx Cache</span>        <span class="token comment">#解决pjax问题</span>        <span class="token directive"><span class="token keyword">proxy_hide_header</span> x-pjax-url</span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">add_header</span> x-pjax-url <span class="token string">"https://7mm.top<span class="token variable">$request_uri</span>"</span></span><span class="token punctuation">;</span>        <span class="token comment">#raw替换</span>        <span class="token directive"><span class="token keyword">proxy_redirect</span> https://raw.githubusercontent.com https://raw.7mm.top</span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> Accept-Encoding <span class="token string">""</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">sub_filter_once</span> <span class="token boolean">off</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">sub_filter</span> <span class="token string">"//github.com"</span> <span class="token string">"//7mm.top"</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">sub_filter</span> <span class="token string">"//raw.githubassets.com"</span> <span class="token string">"//raw.7mm.top"</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_filexskBQvHR</span> <span class="token number">0</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$uri</span> ~* <span class="token string">"\.(gif|png|jpg|css|js|woff|woff2)$"</span> )</span> <span class="token punctuation">&#123;</span>            <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_filexskBQvHR</span> <span class="token number">1</span></span><span class="token punctuation">;</span>            <span class="token directive"><span class="token keyword">expires</span> <span class="token number">12h</span></span><span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$static_filexskBQvHR</span> = <span class="token number">0</span> )</span> <span class="token punctuation">&#123;</span>            <span class="token directive"><span class="token keyword">add_header</span> Cache-Control no-cache</span><span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>    <span class="token punctuation">&#125;</span>    <span class="token directive"><span class="token keyword">access_log</span> /www/wwwlogs/7mm.top.log</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">error_log</span> /www/wwwlogs/7mm.top.error.log</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><p><code>raw.githubusercontent</code>镜像nginx配置</p><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span>    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">443</span> ssl http2</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">server_name</span> raw.xxx.top</span><span class="token punctuation">;</span>    <span class="token comment">#SSL-START SSL相关配置，请勿删除或修改下一行带注释的404规则</span>    <span class="token directive"><span class="token keyword">ssl_certificate</span> /www/server/panel/vhost/cert/7mm.top/fullchain.pem</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_certificate_key</span> /www/server/panel/vhost/cert/7mm.top/privkey.pem</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_protocols</span> TLSv1.1 TLSv1.2 TLSv1.3</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_ciphers</span> EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_prefer_server_ciphers</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_session_cache</span> shared:SSL:10m</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">ssl_session_timeout</span> <span class="token number">10m</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">add_header</span> Strict-Transport-Security <span class="token string">"max-age=31536000"</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">error_page</span> <span class="token number">497</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">location</span> ~ /purge(/.*)</span> <span class="token punctuation">&#123;</span>        <span class="token directive"><span class="token keyword">proxy_cache_purge</span> cache_one <span class="token variable">$host</span><span class="token variable">$1</span><span class="token variable">$is_args</span><span class="token variable">$args</span></span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token comment">#PROXY-START/</span>    <span class="token comment">#raw反代配置</span>    <span class="token directive"><span class="token keyword">location</span> ^~ /</span> <span class="token punctuation">&#123;</span>        <span class="token directive"><span class="token keyword">proxy_pass</span> https://raw.githubusercontent.com</span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> Host raw.githubusercontent.com</span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Real-IP <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">proxy_set_header</span> REMOTE-HOST <span class="token variable">$remote_addr</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">add_header</span> X-Cache <span class="token variable">$upstream_cache_status</span></span><span class="token punctuation">;</span>        <span class="token comment">#proxy_hide_header content-security-policy;</span>        <span class="token comment">#proxy_hide_header Strict-Transport-Security;</span>        <span class="token comment">#proxy_hide_header set-cookie;</span>        <span class="token comment">#proxy_hide_header x-pjax-url;</span>        <span class="token comment">#Set Nginx Cache</span>        <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_fileHDokVEBC</span> <span class="token number">0</span></span><span class="token punctuation">;</span>        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$uri</span> ~* <span class="token string">"\.(gif|png|jpg|css|js|woff|woff2)$"</span> )</span> <span class="token punctuation">&#123;</span>            <span class="token directive"><span class="token keyword">set</span> <span class="token variable">$static_fileHDokVEBC</span> <span class="token number">1</span></span><span class="token punctuation">;</span>            <span class="token directive"><span class="token keyword">expires</span> <span class="token number">12h</span></span><span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>        <span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$static_fileHDokVEBC</span> = <span class="token number">0</span> )</span> <span class="token punctuation">&#123;</span>            <span class="token directive"><span class="token keyword">add_header</span> Cache-Control no-cache</span><span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>    <span class="token punctuation">&#125;</span>    <span class="token comment">#PROXY-END/</span>    <span class="token directive"><span class="token keyword">access_log</span> /www/wwwlogs/7mm.top.log</span><span class="token punctuation">;</span>    <span class="token directive"><span class="token keyword">error_log</span> /www/wwwlogs/7mm.top.error.log</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>杂技浅尝</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Github</tag>
+      
+      <tag>镜像</tag>
+      
+      <tag>Nginx</tag>
+      
+      <tag>CDN</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>vulnhub系列之MOMENTUM</title>
+    <link href="/posts/10008/"/>
+    <url>/posts/10008/</url>
+    
+    <content type="html"><![CDATA[<h1 id="vulnhub系列之MOMENTUM"><a href="#vulnhub系列之MOMENTUM" class="headerlink" title="vulnhub系列之MOMENTUM"></a>vulnhub系列之MOMENTUM</h1><blockquote><p>环境搭建直接略过，vbox桥接没什么好说的</p></blockquote><h2 id="MOMENTUM-1"><a href="#MOMENTUM-1" class="headerlink" title="MOMENTUM: 1"></a>MOMENTUM: 1</h2><h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><p>老一套没什么好说的，直接奔网页去就完了</p><p><img src="https://i.233c.cn/2021/12/07/9dc618b84443a.png" alt="image-20211207195546751"></p><p>网页端比较简陋</p><p><img src="https://i.233c.cn/2021/12/07/1e82ee2b4c2ad.png" alt="image-20211207203511094"></p><p>目录扫描扫出来一大堆东西，这目录下面有好的东西，访问一下先</p><p><img src="https://i.233c.cn/2021/12/07/895abe17ca82c.png" alt="image-20211207203610737"></p><p>貌似是apache的文档，大概没啥用，先看看其他的</p><p><img src="https://i.233c.cn/2021/12/07/385fb5de0bb0f.png" alt="image-20211207203700212"></p><p>点击主站的图片可以跳转到这，存在xss，貌似也没啥用</p><p><img src="https://i.233c.cn/2021/12/07/c72e23ad5a62f.png" alt="image-20211207203944741"></p><p>随便翻翻，在js文件里发现一些注释以后的代码，是个aes解密，先把密钥记下来</p><p><img src="https://i.233c.cn/2021/12/07/328a34f896719.png" alt="image-20211207204102489"></p><h3 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h3><p>到这我就卡住了，目前已有的线索似乎连不起来，等等，xss会不会是个提示，去cookie看看，有个这玩意</p><p><img src="https://i.233c.cn/2021/12/07/9b9481b0c925b.png" alt="image-20211207204656533"></p><p>emmm，还是不知道有啥用，看wp发现原来是用之前拿到的密钥aes解密一下，得到这个，盲猜是ssh账号密码</p><p><img src="https://i.233c.cn/2021/12/07/099f0b34f32d3.png" alt="image-20211207205641848"></p><p>然后，在我怀疑人生的时候，我终于试出了账号是auxerre，密码auxerre-alienum##的ssh用户</p><p><img src="https://i.233c.cn/2021/12/07/e64d5c8942d3f.png" alt="image-20211207205816817"></p><h3 id="权限提升"><a href="#权限提升" class="headerlink" title="权限提升"></a>权限提升</h3><p>老规矩试探一下suid提权，果然没戏</p><p><img src="https://i.233c.cn/2021/12/07/0f67b79bca5e8.png" alt="image-20211207211929041"></p><p>用新漏洞提权就太没意思了，先找找看有没有什么线索，然而文件里啥线索都没发现，倒是发现一个flag</p><p><img src="https://i.233c.cn/2021/12/07/91dac8105f15a.png" alt="image-20211207212106515"></p><p>看样子不是文件提权了，看看有啥服务可以利用吗，然后就发现了redis服务</p><p><img src="https://i.233c.cn/2021/12/07/fd243cc1e8152.png" alt="image-20211207212333515"></p><p>之前听说过redis未授权漏洞，但没有用过</p><p>直接用redis-cli就进去了，果然有未授权，不管了，先看看有没有啥数据，然后…</p><p><img src="https://i.233c.cn/2021/12/07/0a189276f5a15.png" alt="image-20211207212558787"></p><p>结束了？</p><p><img src="https://i.233c.cn/2021/12/07/26fc8082df23f.png" alt="image-20211207212929632"></p><p><img src="https://www.mcmod.cn/pages/tools/achievements/images/achievements/24789_xWwWIXbu.png"></p><p>是的，结束了…</p><p><img src="https://i.233c.cn/2021/12/07/090cc2bcb066c.png" alt="image-20211207213607930"></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>非常简单的一个靶机，没啥好说的,趁热打铁把第二个也刷了吧</p><h2 id="MOMENTUM-2"><a href="#MOMENTUM-2" class="headerlink" title="MOMENTUM: 2"></a>MOMENTUM: 2</h2><h3 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h3><p>端口扫描没什么好说的</p><p><img src="https://i.233c.cn/2021/12/08/d43725725d476.png" alt="image-20211208104830947"></p><p>目录扫描，manual直接略过不看</p><p><img src="https://i.233c.cn/2021/12/08/e051835591356.png" alt="image-20211208105005790"></p><p>主站长这样，这回图片不可以交互了，但是问题不大</p><p><img src="https://i.233c.cn/2021/12/08/e513aec001422.png" alt="image-20211208121842875"></p><p>js目录遍历有个main.js,疑似上传点</p><p><img src="https://i.233c.cn/2021/12/08/1ab78d31000db.png" alt="image-20211208122002877"></p><h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><p>我猜有个表单页面，但是我找不到，问题不大，自己构造一个就行了</p><p><img src="https://i.233c.cn/2021/12/08/de9156e1ed35a.png" alt="image-20211208122436155"></p><p>经过不断尝试我发现只能上传txt文件</p><p><img src="https://i.233c.cn/2021/12/08/67846200c29ee.png" alt="image-20211208122309695"></p><p>这里卡了至少半个小时，上传死活绕不过，没办法，看wp吧</p><p>原来是这个页面有个备份，那估计就是源码审计了</p><p><img src="https://i.233c.cn/2021/12/08/cd379d9060adc.png" alt="image-20211208134055732"></p><p>有个cookie验证和参数验证，cookie看注释好像还少一位，得爆破一下</p><p><img src="https://i.233c.cn/2021/12/08/f63bf2102a5ac.png" alt="image-20211208134144498"></p><p>上传成功了，爆破结果不太好过滤，手动看了一下是缺一位R</p><p><img src="https://i.233c.cn/2021/12/08/38d867a1710dd.png" alt="image-20211208135411032"></p><p><img src="https://i.233c.cn/2021/12/08/e01b9d3c79768.png" alt="image-20211208140017316"></p><p><img src="https://i.233c.cn/2021/12/08/4efc7e140ab08.png" alt="image-20211208135858444"></p><p>能上传了就直接nc反弹shell，上去后在用户目录下拿到了第一个flag</p><p><img src="https://i.233c.cn/2021/12/08/4cf939a0a3db5.png" alt="image-20211208140205734"></p><h3 id="权限提升-1"><a href="#权限提升-1" class="headerlink" title="权限提升"></a>权限提升</h3><p>另外一个用户目录下面也发现一些好东西，这个python脚本疑似可以提权</p><p><img src="https://i.233c.cn/2021/12/08/dfcdf09d16884.png" alt="image-20211208140746826"></p><p>仔细分析发现这里应该有个命令拼接，输入的seed值最终会被传入命令行打印出来</p><p><img src="https://i.233c.cn/2021/12/08/0aebc21672f3c.png" alt="image-20211208141109818"></p><p>这里要密码才能sudo，但估计有密码也不行，没权限</p><p><img src="https://i.233c.cn/2021/12/08/d2522b61e8852.png" alt="image-20211208145717197"></p><p>到这里思路彻底卡住了，没办法，看wp吧，中级难度的对我来说还是太勉强了</p><p>这里有个告诉了个账号密码，提权要登上这个账号才能进行，账号athena，密码myvulnerableapp*，不知道为什么的可以搜一下Asterisk这个单词的意思</p><p><img src="https://i.233c.cn/2021/12/08/c02dff3768247.png" alt="image-20211208150457165"></p><p>上来以后用之前找到的那个脚本提权（这里为什么能提权没整明白。包括sudo为什么不用输入密码）</p><p><img src="https://i.233c.cn/2021/12/08/b54c56c874b59.png" alt="image-20211208151146858"></p><p>到此为止了</p><p><img src="https://i.233c.cn/2021/12/08/ca9aae282e819.png" alt="image-20211208151237882"></p><h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>难度算是中规中矩。主要还是要注意细节，像是文件上传页面的备份，用户目录下的提示什么的，还是不能根据经验来做题。这样子会陷入死胡同</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>vulnhub</tag>
+      
+      <tag>靶机</tag>
+      
+      <tag>网络安全</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>vulnhub系列之COFFEE ADDICTS</title>
+    <link href="/posts/10007/"/>
+    <url>/posts/10007/</url>
+    
+    <content type="html"><![CDATA[<h1 id="vulnhub系列之COFFEE-ADDICTS"><a href="#vulnhub系列之COFFEE-ADDICTS" class="headerlink" title="vulnhub系列之COFFEE ADDICTS"></a>vulnhub系列之COFFEE ADDICTS</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>快比赛了随便刷刷靶机，太菜了只敢去vulnhub挑一点easy难度的，就这个吧</p><p><img src="https://i.233c.cn/2021/12/02/88b0c2ae1775a.png" alt="image-20211202195339670"></p><p>为了防止出现莫名其妙的问题，这里直接用virtual搭建靶机算了，导入开机就能用</p><p><img src="https://i.233c.cn/2021/12/02/da9add28fd671.png" alt="image-20211202200627020"></p><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>nmap默认扫描一波，按照经验都是从web入手的，剩余这里就是走个过场，对了，我这里使用的是wsl2 kali</p><p><img src="https://i.233c.cn/2021/12/02/c7604f72e42be.png" alt="image-20211202203154296"></p><p>直接访问web</p><p><img src="https://i.233c.cn/2021/12/02/d0788b7776aee.png" alt="image-20211202204618767"></p><p>这里给提示了，改host然后访问正确的域名</p><p><img src="https://i.233c.cn/2021/12/02/da44e7a292622.png" alt="image-20211202204830608"></p><h2 id="web渗透"><a href="#web渗透" class="headerlink" title="web渗透"></a>web渗透</h2><p>掏出dirb扫描目录，然后发现是wordpress站点，然后再掏出wpscan,趁着扫描的功夫去网站上看一眼</p><p><img src="https://i.233c.cn/2021/12/02/ef2f7f080d51d.png" alt="image-20211202205619716"></p><p>网站上发现了奇怪的评论，疑似存在密码</p><p><img src="https://i.233c.cn/2021/12/02/0dd74ca49341a.png" alt="image-20211202214619463"></p><p>经过尝试发现密码是这句话去掉空格，然后直接用gus用户进wordpress后台</p><p><img src="https://i.233c.cn/2021/12/02/a1e2715e18065.png" alt="image-20211202214743495"></p><p>这时候顺便回头看了眼wpscan扫描结果，最新版的wordpress，不用想了，不过已经进后台了那也不用管了</p><p><img src="https://i.233c.cn/2021/12/03/81bbbceacd6ce.png" alt="image-20211203171551618"></p><p>随便找个可以写php的地方，直接弹shell吧，经过测试直接执行弹shell命令无效，所以我这里写入文件之后再执行<img src="https://i.233c.cn/2021/12/03/5535de834259a.png" alt="image-20211203171714655"></p><p>访问刚刚更改的php文件，反弹成功</p><p><img src="https://i.233c.cn/2021/12/03/ec13b0d2780b7.png" alt="image-20211203171853259"></p><h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><p>随便翻翻，gus目录下发现两个可疑文件，那个user.txt里面有一串疑似flag的东西</p><p><img src="https://i.233c.cn/2021/12/03/c093049c15971.png" alt="image-20211203175206428"></p><p>再去黑客的用户目录下看看，发现了他的ssh私钥</p><p><img src="https://i.233c.cn/2021/12/03/97ee1d6dee6ab.png" alt="image-20211203175331981"></p><p>把私钥保存下来，尝试导入xshell发现需要密码，这时候只能试试爆破了</p><p><img src="https://i.233c.cn/2021/12/03/0dab3cd0a0a0e.png" alt="image-20211203182419980"></p><p>我们使用john工具来爆破密码，这里需要用到一个脚本(<a href="https://github.com/openwall/john/blob/bleeding-jumbo/run/ssh2john.py">链接</a>)把id_rsa私钥转成john能识别的格式，然后john直接爆破就行，然后密码竟然就是password…</p><p><img src="https://i.233c.cn/2021/12/03/5c15c4f55b238.png" alt="image-20211203184314880"></p><p>然后直接ssh连上去，sudo试探一下，果然没权限，革命尚未成功，同志仍需努力啊</p><p><img src="https://i.233c.cn/2021/12/03/6a73325c53305.png" alt="image-20211203184443438"></p><p>熟练的找下suid提权，emmm，一无所获，看来suid提权走不通</p><p><img src="https://i.233c.cn/2021/12/03/bf4913941c1e5.png" alt="image-20211203184818430"></p><p>突然想到之前badbyte用户下面有几个打不开的文件，果然，有好东西</p><p><img src="https://i.233c.cn/2021/12/03/72f0a8556ee8b.png" alt="image-20211203185504521"></p><p>黑客前几条命令是在改网站，看后面几条，疑似提权，跟着操作一下，直接拿到root权限</p><p><img src="https://i.233c.cn/2021/12/03/2d8240bbd6d16.png" alt="image-20211203185628303"></p><p>到这里，这个靶机算是完成了</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个靶机还是比较基础了，并没有什么高度操作，总的来说还是自己太菜了，中途看了几次wp才做完</p><p>好了，准备开下一个，各位再见</p><p><img src="https://i.233c.cn/2021/12/03/d8e95e4ed8a6a.webp" alt="get_thumbnail"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>vulnhub</tag>
+      
+      <tag>靶机</tag>
+      
+      <tag>网络安全</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>脚本小子初体验之——后渗透</title>
+    <link href="/posts/10006/"/>
+    <url>/posts/10006/</url>
+    
+    <content type="html"><![CDATA[<h1 id="记第一次后渗透"><a href="#记第一次后渗透" class="headerlink" title="记第一次后渗透"></a>记第一次后渗透</h1><blockquote><p>在此感谢我的学长<a href="http://1.117.149.93/">@竹林寺</a></p></blockquote><p>环境说明：</p><table><thead><tr><th>服务器</th><th>网段说明</th></tr></thead><tbody><tr><td>web服务器</td><td>192.168.30.136/10.10.10.150</td></tr><tr><td>域控服务器</td><td>192网段不可用/10.10.10.149</td></tr></tbody></table><p>靶场是白嫖我学长的，初始是给了域名要自己改host</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/130840/35/23243/31297/616a911fEf3ddabb4/4b43d712b137e4c9.png" alt="1.png"></p><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>主站是个贷款界面，扫了一圈没发现有能利用的，倒是网站用的框架thinkphp可能有点洞</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/216586/26/604/165292/616a92a6E038c3441/a943be62bb25b508.png" alt="2.png"></p><p>后台有验证码，抓个包发现存在验证码重放漏洞，也就是说能爆破管理员账号</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/200415/40/13279/1437724/616a94d1Ebe1a1e14/868c7cd9094c2220.png" alt="3.png"></p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/214109/37/628/162953/616a94d0E56bf9574/a8993b6a33c84775.png" alt="4.png"></p><p>爆破基本上是没有用的(主要是靶机已经被我打宕机过了233)，我们看看有没有其他突破口</p><p>百度(bushi)可知，thinkphp3和thinkphp5有一个日志泄露漏洞，随便找个工具扫扫看，<a href="https://github.com/r3change/TPLogScan">地址</a></p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/197607/21/13529/146444/616a9708E965d7f63/62ade3bffae415c7.png" alt="5.png"></p><p>由图可知确实存在信息泄露漏洞，而thinkphp日志里是有sql执行记录的，访问日志，直接搜索password，找到管理员密码的hash(一定要管理员那一天登陆过日志里才有记录)</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/156914/18/21348/166690/616a984cEf6d54d9e/24b4944a7516b50c.png" alt="image.png"></p><p>解码hash直接登录后台，找到一个logo的上传点</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/207262/23/5228/212059/616a9998E03ff789e/c5c40c09c794a5ab.png" alt="image.png"></p><p>多种图片马各种绕未果，可能是白名单+重命名，最后发现上面有个上传白名单设计，眼瞎了(太心急的结果)</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/197149/12/13598/201254/616a9a30E6e5d38ff/11731e294d624998.png" alt="image.png"></p><p>添加php类型后上传shell，可以看到shell没问题，上蚁剑</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/207605/40/5565/205279/616a9c02E0ba747a4/8fbc749f3c058d6f.png" alt="image.png"></p><p>直接用cs生成脚本，然后用蚁剑的虚拟终端把shell弹到cs上去</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/218480/26/626/86008/616a9e73E092e0e7b/6f0ceee640a8c7ed.png" alt="image.png"></p><p>cs中看到会话已经有了，顺手来个权限提升，方便使用mimikatz</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/171663/24/23601/170674/616a9fb6E209bc712/a4f2ac6e937641d6.png" alt="image.png"></p><p>执行ipconfig /all，找到域服务器地址及当前主机在服务器的名字，方便进行域渗透</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/201518/13/11927/286017/616aa0bcE049ba883/83986a8f98d65ecb.png" alt="image.png"></p><p>百度(bushi)搜索域控提权，然后随便找一个，比如说ms14-068，然后看看有没有补丁</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/198078/2/13162/69646/616ab0acE3ebf9f7b/8650d7b8ae24ee2f.png" alt="image.png"></p><p>没有返回结果就是最好的结果，这意味漏洞没有打补丁,准备生成票据攻击域控</p><p>用mimikatz查看密码，再用查看域用户的sid</p><div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">wmic useraccount get name,sid<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div><p><img src="https://img30.360buyimg.com/pop/jfs/t1/210559/6/5602/64169/616ac83fE4e51bc1b/410eb564ffa525db.png" alt="image.png"></p><p>ms14-068需要四个参数，分别是域用户名@域名，域用户sid，域用户密码，域控地址</p><div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">shell c:\Windows\temp\MS14-068.exe -u web@hackbox.com -s S-1-5-21-2005268815-658469957-1189185684-1103 -p !@#Qwe456 -d 10.10.10.149<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络安全</tag>
+      
+      <tag>后渗透</tag>
+      
+      <tag>CobaltStrike</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>大一暑假的一些反思</title>
+    <link href="/posts/10005/"/>
+    <url>/posts/10005/</url>
+    
+    <content type="html"><![CDATA[<h1 id="对自己的认识"><a href="#对自己的认识" class="headerlink" title="对自己的认识"></a>对自己的认识</h1><p>直说吧，我就是个废物，本来打算暑假要学很多东西的，结果啥也没学到</p><h1 id="对别人的一些理解"><a href="#对别人的一些理解" class="headerlink" title="对别人的一些理解"></a>对别人的一些理解</h1><p><a href="https://github.com/96368a/cloudmusic_html">依云</a>项目本来规划是很美好的，但是我错估了自己的能力已经高估了别人，或许我一开始就不应该找人合作开发，不管怎么样，反正现在那个jquery的依云已经是彻底死掉了。就让他死在过去对jquery指责中吧</p><h1 id="现在的计划"><a href="#现在的计划" class="headerlink" title="现在的计划"></a>现在的计划</h1><h2 id="四个大方向"><a href="#四个大方向" class="headerlink" title="四个大方向"></a>四个大方向</h2><ul><li>后端 - java</li><li>网安 - web方向</li><li>深度学习 - 图像识别或语言处理</li><li>前端 - vue</li></ul><h2 id="结尾的话"><a href="#结尾的话" class="headerlink" title="结尾的话"></a>结尾的话</h2><p>网安的话，没人带我已经得准备跑路了，毕竟软件才是我的老本行</p><p>后端、、已经拉那伙人太远了，怎么着也得开始追了</p><p>深度学习，爷的救赎罢</p><p>前端、对jquery的恐惧、对react的恐惧，我暂时一段时间内不想接触了</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>思考人生</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>思考人生</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>vscode多套环境配置指南</title>
+    <link href="/posts/10004/"/>
+    <url>/posts/10004/</url>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>刚学c语言的时候，别人都在用devc++的时候我就用上了vscode，那时候，我见人用vscode就是一句“vscode大法好”,直到后面，我依次配置了python、java、php、node、vue的环境，我渐渐的发掘vscode也并不是这么好用了，因为不管我在写什么语言，总有一些其他语言的插件被加载，于是我就想有没有一直真正的多环境解决方案，没想到还真被我找到了.</p><h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><h2 id="扩展的隔离"><a href="#扩展的隔离" class="headerlink" title="扩展的隔离"></a>扩展的隔离</h2><p>vscode有个启动参数–extensions-dir ，这个参数可以指定扩展的文件夹，可以通过它来隔离不同语言的扩展</p><h2 id="多套环境的配置"><a href="#多套环境的配置" class="headerlink" title="多套环境的配置"></a>多套环境的配置</h2><p>可以通过工作区来隔离不同的语言代码文件</p><h1 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h1><h2 id="一、安装通用扩展"><a href="#一、安装通用扩展" class="headerlink" title="一、安装通用扩展"></a>一、安装通用扩展</h2><p>正常打开vscode并安装通用扩展，即不管哪种环境都需要的插件，如中文包、图标包、美化插件等，如图是我安装的插件</p><p><img src="https://mapp.alicdn.com/1626756175490N0QC9n0I0PWwEO5.png" alt="通用扩展.png"></p><h2 id="二、配置通用插件"><a href="#二、配置通用插件" class="headerlink" title="二、配置通用插件"></a>二、配置通用插件</h2><p>新建语言配置文件夹</p><p><img src="https://mapp.alicdn.com/1626756557752iDzAAgdVOAZIrQx.png" alt="语言配置文件夹.png"></p><p>找到vscode扩展目录，复制所有文件到刚刚新建的每个语言环境文件夹（即语言的通用插件）</p><p>提示：vscode的扩展路径一般在<strong>C:\Users\用户名\.vscode\extensions</strong></p><p><img src="https://mapp.alicdn.com/1626757411305WBupoXeNNrMvdaW.png" alt="扩展路径.png"></p><h2 id="三、配置语言环境"><a href="#三、配置语言环境" class="headerlink" title="三、配置语言环境"></a>三、配置语言环境</h2><p>找到vscode的快捷方式，在目标后面加上参数: –extensions-dir 环境路径</p><p>示例</p><p><code>&quot;C:\Users\Logs404\AppData\Local\Programs\Microsoft VS Code\Code.exe&quot; --extensions-dir &quot;D:\path\vscode\java&quot;</code></p><p>然后复制快捷方式改变环境路径即可配置多套环境</p><p><img src="https://mapp.alicdn.com/1626757928601DV6jhSUrhN8cF70.png" alt="环境配置.png"></p><h2 id="四、完成"><a href="#四、完成" class="headerlink" title="四、完成"></a>四、完成</h2><p>最后配置完成后，一个快捷方式代表一套环境，多套环境扩展直接互不干扰</p><p><strong>提示:</strong>    </p><ol><li><strong>中文语言包等插件可能需要重新安装</strong></li><li><strong>多套环境同时打开可能存在问题</strong></li></ol><hr><blockquote><p>灵感来源: <a href="https://juejin.cn/post/6961435118284046372">https://juejin.cn/post/6961435118284046372</a></p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>环境配置</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>vscode</tag>
+      
+      <tag>环境配置</tag>
+      
+      <tag>Javascript</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>sql注入入门(草稿)</title>
+    <link href="/posts/10003/"/>
+    <url>/posts/10003/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p><strong>观前提醒</strong></p></blockquote><p><strong>本篇文章需要前置知识</strong></p><ul><li><p>知道什么是sql数据库</p></li><li><p>了解基本sql语句</p></li></ul><h1 id="一、了解什么是sql注入"><a href="#一、了解什么是sql注入" class="headerlink" title="一、了解什么是sql注入"></a>一、了解什么是sql注入</h1><p>我这里不扯概念，就简单讲讲我的理解</p><p>sql注入是指后台在拼接sql查询语句时未做安全处理而导致的非法查询</p><p>直接看代码</p><div class="code-wrapper"><pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$id</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'id'</span><span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token variable">$SQL</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"select * from '某字段' where id = <span class="token interpolation"><span class="token variable">$id</span></span>;"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div><p>如上，$id是用户输入的值，会直接拼接在sql语句上，hacker可以通过报错、联合查询等方法获取数据库中的数据。这就叫sql注入</p><p><img src="https://mapp.alicdn.com/1625039144438c9CPKeyVPZ4VzEE.jpg" alt="sql注入"></p><h1 id="二、sql注入有关数据库的那些事"><a href="#二、sql注入有关数据库的那些事" class="headerlink" title="二、sql注入有关数据库的那些事"></a>二、sql注入有关数据库的那些事</h1><h2 id="1-联合查询"><a href="#1-联合查询" class="headerlink" title="1. 联合查询"></a>1. 联合查询</h2><p>联合查询我个人认为是最有用的一种查询，一句话脱库不是梦</p><div class="code-wrapper"><pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">SELECT</span> <span class="token keyword">user</span> <span class="token keyword">FROM</span> dwva<span class="token punctuation">.</span>users<span class="token keyword">UNION</span> <span class="token keyword">SELECT</span> <span class="token number">1</span><span class="token punctuation">,</span>GROUP_CONCAT<span class="token punctuation">(</span>table_name<span class="token punctuation">)</span> <span class="token keyword">FROM</span> information_schema<span class="token punctuation">.</span><span class="token keyword">tables</span><span class="token keyword">WHERE</span> table_schema<span class="token operator">=</span><span class="token keyword">DATABASE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div><h2 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h2><h1 id="二、常见的sql注入方式"><a href="#二、常见的sql注入方式" class="headerlink" title="二、常见的sql注入方式"></a>二、常见的sql注入方式</h1><h2 id="1-数字型注入"><a href="#1-数字型注入" class="headerlink" title="1. 数字型注入"></a>1. 数字型注入</h2><p>#未完待续</p><h1 id="三、一般注入思路"><a href="#三、一般注入思路" class="headerlink" title="三、一般注入思路"></a>三、一般注入思路</h1><h2 id="1-基于报错的联合查询注入"><a href="#1-基于报错的联合查询注入" class="headerlink" title="1.基于报错的联合查询注入"></a>1.基于报错的联合查询注入</h2><ol><li>判断闭合方式</li><li>利用order by 判断列数</li><li>union配合select收集信息<ol><li>数据库表名</li><li>列名</li></ol></li><li>脱库</li></ol><p>笔记</p><div class="code-wrapper"><pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token comment">#查当前数据库所有表名</span><span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span>group_concat<span class="token punctuation">(</span>table_name<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">3</span> <span class="token keyword">from</span> information_schema<span class="token punctuation">.</span><span class="token keyword">tables</span> <span class="token keyword">where</span> table_schema <span class="token operator">=</span> <span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">#查当前表所有列</span><span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span>group_concat<span class="token punctuation">(</span>column_name<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">3</span> <span class="token keyword">from</span> information_schema<span class="token punctuation">.</span><span class="token keyword">columns</span> <span class="token keyword">where</span> table_schema <span class="token operator">=</span> <span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">and</span> table_name <span class="token operator">=</span> <span class="token string">'users'</span> <span class="token comment">--+</span><span class="token comment">#脱库(非通用)</span><span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span>group_concat<span class="token punctuation">(</span>id<span class="token punctuation">,</span><span class="token string">':'</span><span class="token punctuation">,</span>username<span class="token punctuation">,</span><span class="token string">':'</span><span class="token punctuation">,</span>password<span class="token punctuation">,</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">3</span> <span class="token keyword">from</span> users <span class="token comment">--+</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><h2 id="2-基于报错的报错注入"><a href="#2-基于报错的报错注入" class="headerlink" title="2.基于报错的报错注入"></a>2.基于报错的报错注入</h2><h3 id="1-主键重复报错"><a href="#1-主键重复报错" class="headerlink" title="1.主键重复报错"></a>1.主键重复报错</h3><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">and (select 1 from (select count(*),concat((payload),floor (rand(0)*2))x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div><h3 id="2-updatexml-报错"><a href="#2-updatexml-报错" class="headerlink" title="2.updatexml()报错"></a>2.updatexml()报错</h3><div class="code-wrapper"><pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">and</span> updatexml<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span>concat<span class="token punctuation">(</span><span class="token number">0x7e</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">0x7e</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div><h3 id="3-extractvalue-报错"><a href="#3-extractvalue-报错" class="headerlink" title="3.extractvalue()报错"></a>3.extractvalue()报错</h3><div class="code-wrapper"><pre class="line-numbers language-sql" data-language="sql"><code class="language-sql"><span class="token operator">and</span> <span class="token punctuation">(</span>extractvalue<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span>concat<span class="token punctuation">(</span><span class="token number">0x7e</span><span class="token punctuation">,</span>substring<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div><h3 id="数据溢出报错-仅mysql5-5-53以下"><a href="#数据溢出报错-仅mysql5-5-53以下" class="headerlink" title="数据溢出报错(仅mysql5.5.53以下)"></a>数据溢出报错(仅mysql5.5.53以下)</h3><h1 id="四、注入的高级技巧"><a href="#四、注入的高级技巧" class="headerlink" title="四、注入的高级技巧"></a>四、注入的高级技巧</h1><h2 id="1-堆叠注入"><a href="#1-堆叠注入" class="headerlink" title="1.堆叠注入"></a>1.堆叠注入</h2><h3 id="改表名"><a href="#改表名" class="headerlink" title="改表名"></a>改表名</h3><h3 id="预处理语句"><a href="#预处理语句" class="headerlink" title="预处理语句"></a>预处理语句</h3><h4 id="正则绕过技巧"><a href="#正则绕过技巧" class="headerlink" title="正则绕过技巧"></a>正则绕过技巧</h4><ol><li>concat</li><li>char</li><li>hex</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络安全</tag>
+      
+      <tag>sql</tag>
+      
+      <tag>注入</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>利用onedrive自建网盘</title>
+    <link href="/posts/10002/"/>
+    <url>/posts/10002/</url>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一直想做一个视频站用来存天依的mv来着，奈何视频站成本太高了根本做不起…</p><p>然后无意间发现了onedrive这个好东西，利用<a href="https://github.com/spencerwooo/onedrive-cf-index">onedrive-cf-index</a>或<a href="https://github.com/qkqpttgf/OneManager-php">OneManager-php</a>等可以白嫖微软的大容量网盘，本篇文章记录onedrive-cf-index搭建的全过程。</p><h1 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h1><blockquote><p>部署之前你得有一个OneDrive账号</p></blockquote><h2 id="生成OneDrive-API令牌"><a href="#生成OneDrive-API令牌" class="headerlink" title="生成OneDrive API令牌"></a>生成OneDrive API令牌</h2><h3 id="1-访问-URL-创建新的-Blade-app："><a href="#1-访问-URL-创建新的-Blade-app：" class="headerlink" title="1. 访问 URL 创建新的 Blade app："></a>1. 访问 URL 创建新的 Blade app：</h3><ul><li><a href="https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">Microsoft Azure App registrations</a>（普通版 OneDrive）</li><li><a href="https://portal.azure.cn/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">Microsoft Azure.cn App registrations</a>（OneDrive 世纪互联版本）</li></ul><ol><li><strong>建议将语言设置为「英语」以保证以下步骤中提到的模块和按钮的名称一致</strong>：</li><li>使用你的 Microsoft 账户登录，选择 <code>New registration</code>；</li><li>在 <code>Name</code> 处设置 Blade app 的名称，比如 <code>my-onedrive-cf-index</code>；</li><li>将 <code>Supported account types</code> 设置为 <code>Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)</code>。OneDrive 世纪互联用户设置为：<code>任何组织目录（任何 Azure AD 目录 - 多租户）中的帐户</code>；</li><li>将 <code>Redirect URI (optional)</code> 设置为 <code>Web</code>（下拉选项框）以及 <code>http://localhost</code>（URL 地址）；</li><li>点击 <code>Register</code>.</li></ol><p><img src="https://mapp.alicdn.com/1624959452937zVysi9cGOGLXojy.png" alt="注册应用"></p><h3 id="2-获取client-id"><a href="#2-获取client-id" class="headerlink" title="2. 获取client_id"></a>2. 获取client_id</h3><p>打开注册好的应用，查看<code>client_id</code></p><p><img src="https://mapp.alicdn.com/1624960073586X4Iy5tI55NAfors.png" alt="获取client_id"></p><h3 id="3-创建Client-secret"><a href="#3-创建Client-secret" class="headerlink" title="3.创建Client secret"></a>3.创建Client secret</h3><p>打开 <code>证书和密码</code> 面板，点击 <code>新客户端密码</code>，创建一个新的叫做 <code>client_secret</code> 的 Client secret，并将 <code>截止期限</code> 设置为 <code>Never</code>。点击 <code>添加</code> 并复制 <code>client_secret</code> 的 <code>Value</code> 并保存下来 <strong>（仅有此一次机会）</strong>：</p><p><img src="https://mapp.alicdn.com/1624960504743Rb7mC84nwRbPEmz.png" alt="创建Client secret"></p><h3 id="4-添加权限"><a href="#4-添加权限" class="headerlink" title="4.添加权限"></a>4.添加权限</h3><p>打开 <code>API permissions</code> 面板，选择 <code>Microsoft Graph</code>，选择 <code>Delegated permissions</code>，并搜索 <code>offline_access, Files.Read, Files.Read.All</code> 这三个权限，<strong>选择这三个权限，并点击 <code>Add permissions</code>：</strong></p><p><img src="https://mapp.alicdn.com/1624969497145V9czMRrajdhd4Zo.png" alt="添加权限"></p><p><strong>你应该确保开启前三个权限：</strong></p><p><img src="https://mapp.alicdn.com/1624969496369ZQPCU90de5k6RSe.png" alt="查看权限"></p><h3 id="5-获取refresh-token"><a href="#5-获取refresh-token" class="headerlink" title="5.获取refresh_token"></a>5.获取refresh_token</h3><p>前往<a href="http://nodejs.cn/download/">nodejs中文网</a>下载nodejs安装之后在命令行运行:</p><p><code>npx @beetcb/ms-graph-cli</code></p><p>依次选择onedrive版本并输入client_id、client_secret，然后回车等待跳转本地地址，最后将本地地址粘贴进来，最后得到refresh_token</p><p>这里使用官方演示动图</p><p><img src="https://pic.stackoverflow.wiki/uploadImages/111/8/55/226/2021/06/29/20/32/3635193c-a0a2-4e6a-be2d-2edb7daebaa4.svg" alt="demo.svg"></p><p>最后，官方建议建一个文件夹用来分享，而不是分享主目录，默认为 /Public</p><h2 id="Cloudflare部署"><a href="#Cloudflare部署" class="headerlink" title="Cloudflare部署"></a>Cloudflare部署</h2><blockquote><p>提示，你需要在cloudflare有一个绑定的域名，我这里用的是freedom的免费域名</p></blockquote><h3 id="1-获取cloudflare的令牌"><a href="#1-获取cloudflare的令牌" class="headerlink" title="1.获取cloudflare的令牌"></a>1.获取cloudflare的令牌</h3><ol><li><p>打开 <a href="https://dash.cloudflare.com/login">https://dash.cloudflare.com/login</a> 登录，选择你绑定的域名，下拉，右下角可以看到自己的区域ID(zone_id)和账号id(account_id)</p><p><img src="https://p3-tt.byteimg.com/origin/pgc-image/9d1c822395fe4e9a8c5cd001ca77d6ba.png" alt="查看各种id"></p></li><li><p>在 <code>Workers</code> -&gt; <code>管理 Workers</code> -&gt; <code>创建 Worker</code> 处创建一个worker(注意，Workers决定将来的域名前缀),保存部署即可</p></li></ol><p><img src="https://mapp.alicdn.com/1624971184097GCkvzywcxqCmCWX.png" alt="创建Workers"></p><h3 id="2-配置项目"><a href="#2-配置项目" class="headerlink" title="2.配置项目"></a>2.配置项目</h3><p>​    1. clone<a href="https://github.com/spencerwooo/onedrive-cf-index">onedrive-cf-index</a>项目到本地</p><p>​    2. 在项目目录依次输入(需要nodejs环境)</p><div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># 安装 CloudFlare Workers 官方编译部署工具npm i @cloudflare&#x2F;wrangler -g# 使用 npm 安装依赖npm install# 使用 wrangler 登录 CloudFlare 账户wrangler login# 使用这一命令检查自己的登录状态wrangler whoami&#96;&#96;&#96;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><ol start="3"><li><p>创建叫做 BUCKET 的 Cloudflare Workers KV bucket：</p><div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># 创建 KV bucketwrangler kv:namespace create &quot;BUCKET&quot;# ... 或者，创建包括预览功能的 KV bucketwrangler kv:namespace create &quot;BUCKET&quot; --preview<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></li><li><p>修改目录下的<code>wrangler.toml</code>更改为之前获取到的各种id</p><ul><li><code>name</code>：之前创建的 worker 名称，我们的 Worker 默认会发布到这一域名下：<code>&lt;name&gt;.&lt;worker_subdomain&gt;.workers.dev</code>；</li><li><code>account_id</code>：我们的 Cloudflare 账号ID；</li><li><code>zone_id</code>：我们的 Cloudflare 地区ID。</li></ul></li><li><p>修改 <code>wrangler.toml</code>里面的 <code>kv_namespaces</code></p><p>仅需替换 id 和（或者）preview_id 即可。如果不需要预览功能，那么移除 preview_id 即可。</p></li><li><p>修改 src/config/default.js</p><ul><li><code>client_id</code>：刚刚获取的 OneDrive <code>client_id</code>；</li><li><code>base</code>：之前创建的 <code>base</code> 目录；</li><li>如果你部署常规国际版 OneDrive，那么忽略以下步骤即可；</li><li>如果你部署的是由世纪互联运营的中国版 OneDrive：<ul><li>修改 <code>type</code> 下的 <code>accountType</code> 为 <code>1</code>；</li><li>保持 <code>driveType</code> 不变；</li></ul></li><li>如果你部署的是 SharePoint 服务：<ul><li>保持 <code>accountType</code> 不变；</li><li>修改 <code>driveType</code> 下的 <code>type</code> 为 <code>1</code>；</li><li>并根据你的 SharePoint 服务修改 <code>hostName</code> 和 <code>sitePath</code>。</li></ul></li></ul></li><li><p>添加 Cloudflare Workers 环境变量</p><div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># 添加我们的 refresh_token 和 client_secretwrangler secret put REFRESH_TOKEN# ... 并在这里粘贴我们的 refresh_tokenwrangler secret put CLIENT_SECRET# ... 并在这里粘贴我们的 client_secretwrangler secret put AUTH_PASSWORD# ... 在这里输入我们自己设置的认证密码<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></li></ol><h3 id="3-预览-amp-发布"><a href="#3-预览-amp-发布" class="headerlink" title="3.预览&amp;发布"></a>3.预览&amp;发布</h3><p>最后，终于到发布了</p><div class="code-wrapper"><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#如果配置的预览可以先预览wrangler preview#打包发布wrangler publish<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><p>最后，访问发布得到的地址即可</p><p><img src="https://mapp.alicdn.com/1624973953533bpXRln0KQoUoZIS.png" alt="最终效果图"></p><p>这是我往onedrive里随便存的文件，可以看到是没问题的</p><p><img src="https://mapp.alicdn.com/16249739532448Fs2oH78N2Lg4cx.png" alt="onedrive"></p><h1 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h1><p>就像这样了，有空再美化一下，还得研究一下onedrive上传方案</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>杂技浅尝</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ondedrive</tag>
+      
+      <tag>cloudflare</tag>
+      
+      <tag>网盘</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>网上冲(an)浪(quan)必备知识</title>
+    <link href="/posts/10001/"/>
+    <url>/posts/10001/</url>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近打算开始学网安了，这篇网上冲浪基础知识算是平时的一些积累吧，大佬勿喷</p><h1 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h1><p>域名是个啥呢，就是一个网站的名字，通过dns协议来解析到网站对应的ipv4地址嘛，ipv4地址用来做网站地址的话肯定不好记嘛，于是人们就发明了域名，记网站对应的英文名（现在支持中文及各种语言的域名了）加后缀就能直接访问网站了</p><h2 id="域名后缀"><a href="#域名后缀" class="headerlink" title="域名后缀"></a>域名后缀</h2><p>域名后缀，即顶级域名<br><img src="https://img30.360buyimg.com/pop/jfs/t1/189450/33/3621/27039/60a767bcE4bb0db1d/745a155ed94aa831.png" alt="域名后缀举例" title="域名后缀举例"></p><p>如图，<code>com</code>就是顶级域名(域名后缀)，而 <code>bing.com</code> 称为一级域名,以此类推 <code>www.bing.com</code> 就是二级域名，<br>一个域名后缀可以组成无数个一级域名，一个一级域名又可以分成无数个二级域名，<br>个人注册域名的话一般是选一个域名后缀，然后注册一级域名，注册完之后就可以进行二级域名分发了.<br>例如我博客的域名是<code>blog.233c.cn</code>,一级域名是<code>233c.cn</code>,而</p><ul><li><code>blog.233c.cn</code></li><li><code>pan.233c.cn</code></li><li><code>www.233c.cn</code><br>等，都是一级域名分发出去的二级域名</li></ul><p><strong>这里只需要了解一下常见域名后缀就行了</strong></p><blockquote><p>域名后缀一般分两种，国家缩写后缀和特殊含义后缀<br>顺便提一句，大型组织其实也能申请域名后缀(比如baidu)</p></blockquote><ul><li><strong><code>com</code>  <code>net</code> <code>org</code></strong> 国际通用域名</li><li><strong><code>cn</code></strong>  中国域名</li><li><strong><code>gov gov.*</code></strong> 政府域名，不怕死的尽管冲这种站</li><li><strong><code>edu edu.*</code></strong> 教育域名，可以白嫖国外大厂的学生套餐<br>剩下的都算是杂七乱八的域名</li><li><strong><code>top</code></strong></li><li><strong><code>xyz</code></strong></li><li><strong><code>top</code></strong></li></ul><h1 id="web协议-HTTP与HTTPS"><a href="#web协议-HTTP与HTTPS" class="headerlink" title="web协议(HTTP与HTTPS)"></a>web协议(HTTP与HTTPS)</h1><p>打算学网安的话，肯定要从web安全学起啦，所以网页传输协议还是有必要了解一下的</p><h2 id="1-HTTP"><a href="#1-HTTP" class="headerlink" title="1.HTTP"></a>1.HTTP</h2><p>HTTP,即超文本传输协议（Hypertext Transfer Protocol），这什么乱七八糟的不用管它，你只要知道这玩意是个明文协议就行，就因为明文传输数据很容易被中间人攻击，所以主流网站都已经淘汰了</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/187864/38/4204/56423/60a6638cE33f56c18/b22ca3b03184b75f.png" alt="http" title="http"></p><h2 id="2-HTTPS"><a href="#2-HTTPS" class="headerlink" title="2.HTTPS"></a>2.HTTPS</h2><p>HTTPS，就是HTTP+SSL，至于SSL是什么，你只要知道SSL是个加密协议就行，HTTPS利用ssl证书加密HTTP传输的内容，一定程度保证了网站的安全性</p><p><img src="https://img30.360buyimg.com/pop/jfs/t1/190699/19/4241/46274/60a663beE97055bd0/4fde71c889544fef.png" alt="https" title="https"></p><p>以谷歌浏览器为例，地址栏显示不安全的一般都是http协议（或者是有问题的https，比如证书过期），相反，https协议会显示安全连接,且可以查看到一个与域名对应的证书</p><p><strong>你所需要记住的大概就是http可以直接抓包（明文传输），https需要在本地安装伪装证书才能抓包</strong></p><h1 id="HTTP方法"><a href="#HTTP方法" class="headerlink" title="HTTP方法"></a>HTTP方法</h1><p>不管是https还是http，都是用http方法传输网页数据的，只不过https套了一层ssl证书加密</p><h2 id="get"><a href="#get" class="headerlink" title="get"></a>get</h2><p>按照我的理解，get是用来请求的数据的，get只获取数据，get的参数不会是服务器的内容发生改变<br><img src="https://img30.360buyimg.com/pop/jfs/t1/190184/4/4357/70086/60a778c5E54729a7a/4c0d0d1fe92ab5fc.png" alt="GET"><br>如图，get请求地址和参数以<code>&#39;?&#39;</code>为分隔，前面的 <code>https://cn.bing.com/search</code> 是请求地址,<br>而 <code>q=木末君&amp;qs=n&amp;form=QBRE&amp;...</code> 这些是请求参数<br>多个参数间以 <code>&#39;&amp;&#39;</code> 为分隔,也就是说 <code>q=木末君</code> 是一个参数，<code>qs=n</code> 也是一个参数</p><h2 id="post"><a href="#post" class="headerlink" title="post"></a>post</h2><p>还是按照我的理解，post是用来给服务器传数据的，<br><img src="https://img30.360buyimg.com/pop/jfs/t1/177863/34/5302/45060/60a77c87E57682171/e0fcda218b75215b.png" alt="post"></p><p>如图， <code>https://api.233c.cn/1.1/batch</code> 是请求地址，而请求参数，下面那一大段都是请求体，post的请求是多变的，最常见的还是get那种格式，图上是json格式</p><h2 id="http状态码"><a href="#http状态码" class="headerlink" title="http状态码"></a>http状态码</h2><p>HTTP状态码分类</p><table><thead><tr><th>分类</th><th>分类描述</th></tr></thead><tbody><tr><td>1**</td><td>信息，服务器收到请求，需要请求者继续执行操作</td></tr><tr><td>2**</td><td>成功，操作被成功接收并处理</td></tr><tr><td>3**</td><td>重定向，需要进一步的操作以完成请求</td></tr><tr><td>4**</td><td>客户端错误，请求包含语法错误或无法完成请求</td></tr><tr><td>5**</td><td>服务器错误，服务器在处理请求的过程中发生了错误</td></tr></tbody></table><p>大概看一下就行，具体需要记住的有</p><ul><li><strong>404 页面/资源不存在</strong></li><li><strong>403 页面/资源无权限访问</strong></li><li><strong>502 服务器出错</strong></li><li><strong>301/302 页面跳转</strong></li></ul><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>get与post对我来说最大的区别，大概就是请求参数一个在上面一个在下面</p><h2 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续.."></a>未完待续..</h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>网络安全</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络安全</tag>
+      
+      <tag>域名</tag>
+      
+      <tag>协议</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>网站加载速度优化指北</title>
+    <link href="/posts/50899/"/>
+    <url>/posts/50899/</url>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因为没钱，所以博客用的免费的github pages，但是github pages这速度，真的是一言难尽，所以决定从网站结构的角度出发，来尽可能的优化一下网站的加载速度</p><h1 id="网站静态资源优化"><a href="#网站静态资源优化" class="headerlink" title="网站静态资源优化"></a>网站静态资源优化</h1><h2 id="一、公共库优化"><a href="#一、公共库优化" class="headerlink" title="一、公共库优化"></a>一、公共库优化</h2><p>以我的博客为例子，随便打开一篇文章，然后打开谷歌浏览器的调试工具，切换到网络选项，Ctrl+F5强制刷新一下，然后等待加载完成，把结果按时间排序</p><p><img src="https://pic.imgdb.cn/item/60a62bd16ae4f77d356b2d23.png" alt="优化前加载时间"></p><p>先从加载时间过长的外部资源入手，比如说bootstrap、jquery这种库，</p><p>我这个主题默认用的是<a href="https://www.jsdelivr.com/" title="jsdelivr">jsdelivr</a>，可以换成国内的<a href="https://www.bootcdn.cn/" title="bootcdn">bootcdn</a>或者<a href="https://cdn.baomitu.com/" title="baomitu">baomitu</a></p><p><img src="https://pic.imgdb.cn/item/60a62d216ae4f77d3571edc2.png" alt="静态资源分析"></p><p>更换为bootcdn之后<br><img src="https://pic.imgdb.cn/item/60a6378c6ae4f77d35aaddb5.png" alt="bootcdn加速"></p><p><img src="https://pic.imgdb.cn/item/60a637576ae4f77d35a9e544.png" alt="bootcdn加载"></p><p>可以看到加速时间是快了很多的</p><h2 id="二、图片优化"><a href="#二、图片优化" class="headerlink" title="二、图片优化"></a>二、图片优化</h2><p>公共库的优化搞定了之后，我们再来看看图片</p><p><img src="https://pic.imgdb.cn/item/60a640e46ae4f77d35dbc245.png"></p><p>这加载时间实在是惨不忍睹，主要有两个优化方向</p><h3 id="1-图片压缩"><a href="#1-图片压缩" class="headerlink" title="1.图片压缩"></a>1.图片压缩</h3><p>第一选择当然从根源入手了，想办法把图片文件的大小缩小不就好了，这里推荐两个图片在线压缩网站</p><h4 id="1-tinypng"><a href="#1-tinypng" class="headerlink" title="1.tinypng"></a>1.<a href="https://tinypng.com/" title="tinypng">tinypng</a></h4><p><img src="https://pic.imgdb.cn/item/60a643526ae4f77d35e93d02.png" alt="tinypng"></p><h4 id="2-docsmall"><a href="#2-docsmall" class="headerlink" title="2.docsmall"></a>2.<a href="https://docsmall.com/image-compress" title="docsmall">docsmall</a></h4><p><img src="https://pic.imgdb.cn/item/60a643bf6ae4f77d35eb7d76.png" alt="docsmall"></p><p>这一类网站一搜一大把，压缩效果其实也差不多，至于选择用哪一个，那就仁者见仁，智者见智了，我最常用的是<a href="https://tinypng.com/" title="tinypng">tinypng</a>。</p><h3 id="图床"><a href="#图床" class="headerlink" title="图床"></a>图床</h3><p>如果可以，最好把图片和网站分开存放，不要过于相信你的服务器，反正网上的图床也是一搜一大把，找个带cdn的图床岂不美哉？</p><p>烂大街的像<a href="https://imgurl.org/" title="ImgURL">ImgURL</a>、<a href="https://sm.ms/" title="SM.MS">SM.MS</a>、<a href="https://imgtu.com/" title="路过图床">路过图床</a>这种我就不说了，我推荐几个小众的吧(跑路警告)</p><p><del>1.<a href="https://www.superbed.cn/" title="聚合图床">聚合图床</a></del></p><p><del>这玩意也是我的主力</del><br>这狗玩意免费接口竟然也是抓的第三方…<br>啥接口都用，还不如第三个..，起码还能自己选一个快的</p><p>2.<a href="https://kjava.com/" title="酷Java图床">酷Java图床</a><br>v2ex看到的，速度还行</p><p>3.<a href="https://pic.onji.cn/" title="映画の图床">映画の图床</a><br>非自建图床，是位v友抓的大厂的接口，图片上传无法删除，而且存在一定风险(参考新浪图床防盗链事件)</p><p>4.新增其他</p><ul><li><a href="https://img.so/">https://img.so/</a></li><li><a href="https://imgbb.com/">https://imgbb.com/</a></li><li><a href="https://youjb.com/">https://youjb.com/</a></li><li><a href="https://img.gejiba.com/">https://img.gejiba.com/</a></li></ul><blockquote><p>说明</p></blockquote><p>公开图床存在跑路风险，自建图床怕被刷流量，至于Github+jsDelivr当图床，我并不赞成，而且速度也不咋地</p><h2 id="三-CDN"><a href="#三-CDN" class="headerlink" title="三.CDN"></a>三.CDN</h2><p>还在试验，暂时没上</p><p>未完待续…</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>网站</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网站</tag>
+      
+      <tag>cdn</tag>
+      
+      <tag>静态资源</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>记一次linux内核编译</title>
+    <link href="/posts/56936/"/>
+    <url>/posts/56936/</url>
+    
+    <content type="html"><![CDATA[<h1 id="debian10的内核编译"><a href="#debian10的内核编译" class="headerlink" title="debian10的内核编译"></a>debian10的内核编译</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>由于工作室测试系统需要移植内核，恰巧没人有空，我就来整整</p><h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>这里选用vmware安装debian10为编译环境</p><h3 id="镜像选择"><a href="#镜像选择" class="headerlink" title="镜像选择"></a>镜像选择</h3><p>先下载debian10镜像文件，官网下载即可，我这里直接去<a href="http://mirrors.ustc.edu.cn/debian-cd/">中科大镜像</a>站去下载gnome桌面的版本</p><p><img src="https://img.imgdb.cn/item/608177a1563420b64755c978.png"></p><h3 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h3><p>vmware安装镜像不用多说，</p><p>进入系统之后顺便开个ssh，我这里不知道为什么装不了vmware tools，用不了剪切板，<br>然后安装编译需要的组件</p><blockquote><p><code>apt install build-essential libncurses5-dev -y</code><br><code>apt-get build-dep linux</code></p></blockquote><p><img src="https://img.imgdb.cn/item/6086c179d1a9ae528fe9d193.png"></p><h3 id="内核源码下载"><a href="#内核源码下载" class="headerlink" title="内核源码下载"></a>内核源码下载</h3><p>这里可以去<a href="https://www.kernel.org/">kernel.org</a>或者<a href="https://www.lkml.org/">lkml.org</a>下载<br><img src="https://img.imgdb.cn/item/60817a20563420b6476db431.png"></p><h3 id="源码准备"><a href="#源码准备" class="headerlink" title="源码准备"></a>源码准备</h3><p>把下载的源码移动到debian里，我这里没有vmware tools就只能用scp命令了<br><img src="https://img.imgdb.cn/item/6086bd57d1a9ae528fc03291.png"></p><blockquote><p><code>xz -d </code>#解压源码得到tar压缩文件<br><code>tar -xvf </code>#解压tar文件得到源代码文件夹(图中多了一个z参数)</p></blockquote><p><img src="https://img.imgdb.cn/item/6086be77d1a9ae528fcb8075.png"></p><h3 id="源码配置"><a href="#源码配置" class="headerlink" title="源码配置"></a>源码配置</h3><p>随便看一眼源码文件，表示看不懂，不过不要慌，就用默认的配置就行了。看网上的还说要复制系统配置什么的，完全不用这么麻烦，直接使用<code>make menuconfig</code>的默认配置就行了，打开后直接保存退出<br>(终端似乎用不了，这里是个坑)<br>(从这里开始所有命令都在root权限下运行)</p><p><img src="https://img.imgdb.cn/item/6086bff6d1a9ae528fda55e9.png"></p><p><img src="https://img.imgdb.cn/item/6086c2f0d1a9ae528ff95e2b.png"></p><p><img src="https://img.imgdb.cn/item/6086c301d1a9ae528ffa0a35.png"></p><h3 id="禁用签名密钥"><a href="#禁用签名密钥" class="headerlink" title="禁用签名密钥"></a>禁用签名密钥</h3><p>编辑.config文件，把key改成空<br><code>CONFIG_SYSTEM_TRUSTED_KEYS=&quot;&quot;</code></p><p><img src="https://img.imgdb.cn/item/6086c454d1a9ae528f0761d7.png"></p><p>再执行</p><blockquote><p><code>scripts/config --disable MODULE_SIG</code><br><code>scripts/config --disable DEBUG_INFO</code></p></blockquote><p>禁用签名验证</p><h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>最后一步，直接执行编译</p><blockquote><p><code>make -j8 deb-pkg</code>#-j8表示使用8个线程，一般cpu都能吃满了 </p></blockquote><p><img src="https://img.imgdb.cn/item/6086c614d1a9ae528f190479.png"></p><p>坐等编译成功,喝杯咖啡的功夫就编译好了，上次可是花了半小时呢<br><img src="https://img.imgdb.cn/item/6086cbaed1a9ae528f60c542.png"></p><h3 id="试验一下编译的内核"><a href="#试验一下编译的内核" class="headerlink" title="试验一下编译的内核"></a>试验一下编译的内核</h3><p>直接安装内核，重启</p><blockquote><p><code>sudo dpkg -i *.deb</code></p></blockquote><p><img src="https://img.imgdb.cn/item/6086cc5ad1a9ae528f6a8e9b.png"></p><p>可以看到内核更新成功了</p><p><img src="https://img.imgdb.cn/item/6086cc95d1a9ae528f6e0c90.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>杂技浅尝</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>内核</tag>
+      
+      <tag>kernel</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Vscode配置c/c++环境</title>
+    <link href="/posts/47667/"/>
+    <url>/posts/47667/</url>
+    
+    <content type="html"><![CDATA[<h1 id="从零开始的vscode环境配置"><a href="#从零开始的vscode环境配置" class="headerlink" title="从零开始的vscode环境配置"></a>从零开始的vscode环境配置</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实我电脑是配好环境的，不过因为时间太久了(本来也是东拼西凑来的配置)，忘记怎么配了。  </p><p>今天给人配环境弄了好一会竟然没弄好，实属感到有些丢人</p><p>遂决定重新配下并将过程记录下来</p><h2 id="一、安装自然不用我多说"><a href="#一、安装自然不用我多说" class="headerlink" title="一、安装自然不用我多说"></a>一、安装自然不用我多说</h2><p>附Vscode官网：[链接](<a href="https://code.visualstudio.com/">https://code.visualstudio.com/</a> Vscode官网)  </p><p>直接下载安装无脑下一步就好了  </p><p><img src="https://img.imgdb.cn/item/6049d4775aedab222cf47e19.png">  </p><p>安装完直接打开</p><h2 id="二、安装必备插件"><a href="#二、安装必备插件" class="headerlink" title="二、安装必备插件"></a>二、安装必备插件</h2><p>图中第一个是运行c/c++代码必需插件，第二个是简体中文插件，安装完记得重启软件  </p><p><img src="https://img.imgdb.cn/item/6049d5525aedab222cf5014e.png"></p><h2 id="三、配置插件"><a href="#三、配置插件" class="headerlink" title="三、配置插件"></a>三、配置插件</h2><p>打开vscode左下角的设置按钮，然后选择命令面板  </p><p><img src="https://img.imgdb.cn/item/6049d7255aedab222cf5e44e.png">  </p><p>然后在上方搜索框中输入c/c++,选择编辑配置选项（UI）；</p><p><img src="https://img.imgdb.cn/item/6049d7645aedab222cf5faec.png"></p><p>然后找到你的编译器文件，选中文件，按住shitf+右键复制文件路径，粘贴到vscode的配置里，并将IntelliSense模式改为win-gcc-64（一定要改！！）<br>这里需要说明一下的是，c语言编译器是gcc,c++编译器是g++,g++能编译c语言和c++，但是gcc只能编译c语言，按自己的需求来选择编译器，我这里就选择g++了  </p><p><img src="https://img.imgdb.cn/item/6049d9b75aedab222cf731b8.png"></p><p><img src="https://img.imgdb.cn/item/6049da895aedab222cf7a960.png"></p><p>随便打开一个文件，打上一个断点，按下F5开始调试<br>选择c++(GDB)  </p><p><img src="https://img.imgdb.cn/item/6049dc5a5aedab222cf8a573.png"></p><p>选择之前配置的编译器<br><img src="https://img.imgdb.cn/item/6049dc715aedab222cf8b25d.png"></p><p>然后就会自动生成配置文件并运行了  </p><p><img src="https://img.imgdb.cn/item/6049dc875aedab222cf8be8f.png">  </p><p>运行成功之后会停止断点处  </p><p><img src="https://img.imgdb.cn/item/6049dc945aedab222cf8c5b6.png">  </p><p>到这一步就已经配置好了<br>在调试区自由的查看编辑变量什么的操作都可以完成了  </p><p><img src="https://img.imgdb.cn/item/6049dd7e5aedab222cf94bbf.png"></p><h2 id="优化配置"><a href="#优化配置" class="headerlink" title="优化配置"></a>优化配置</h2><p>由于c/c++程序在编译后会生成exe文件，编译的程序一多并且全部和源文件堆在一起让我有点强迫症发作  </p><p>所以我习惯建一个bin文件夹来专门存放编译后的exe文件<br>首先新建一个文件夹  </p><p><img src="https://img.imgdb.cn/item/6049df235aedab222cfa5d56.png"></p><p>然后分别编辑配置文件launch.json和tasks.json<br>配置变量参考:</p><div class="code-wrapper"><pre class="line-numbers language-$&#123;workspaceFolder&#125;" data-language="$&#123;workspaceFolder&#125;"><div class="caption"><span>:表示当前workspace文件夹路径，也即/home/Coding/Test</span></div><code class="language-$&#123;workspaceFolder&#125;">$&#123;workspaceRootFolderName&#125;:表示workspace的文件夹名，也即Test$&#123;file&#125;:文件自身的绝对路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode&#x2F;tasks.json$&#123;relativeFile&#125;:文件在workspace中的路径，也即.vscode&#x2F;tasks.json$&#123;fileBasenameNoExtension&#125;:当前文件的文件名，不带后缀，也即tasks$&#123;fileBasename&#125;:当前文件的文件名，tasks.json$&#123;fileDirname&#125;:文件所在的文件夹路径，也即&#x2F;home&#x2F;Coding&#x2F;Test&#x2F;.vscode$&#123;fileExtname&#125;:当前文件的后缀，也即.json$&#123;lineNumber&#125;:当前文件光标所在的行号$&#123;env:PATH&#125;:系统中的环境变量<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><p>我的变量为:</p><blockquote><p><code>$&#123;workspaceFolder&#125;\\bin\\$&#123;fileBasenameNoExtension&#125;.exe</code> //表示在当前工作区的bin文件夹下编译调试</p></blockquote><p><img src="https://img.imgdb.cn/item/6049e0bd5aedab222cfb2bf9.png"></p><p><img src="https://img.imgdb.cn/item/6049e0ca5aedab222cfb341c.png"></p><p>最后建个嵌套文件夹试验一下</p><p><img src="https://img.imgdb.cn/item/6049e1805aedab222cfb9965.png"></p><p>可以看到确实在编译在了bin文件夹下</p><h2 id="一些提示"><a href="#一些提示" class="headerlink" title="一些提示"></a>一些提示</h2><p>mingw工具链下的GDB不支持中文程序名，因此如果你使用中文文件名可能会出现下面的错误</p><p><img src="https://img.imgdb.cn/item/6049e2695aedab222cfc2318.png"></p><h3 id="一个不算解决方法的解决方法"><a href="#一个不算解决方法的解决方法" class="headerlink" title="一个不算解决方法的解决方法"></a>一个不算解决方法的解决方法</h3><p>在launch.json和tasks.json文件中指定编译后的文件名，这样就不存在中文的问题了，<br>只是这样所有的程序编译后都会是那个文件名（问题不大，并没有什么影响）</p><p><img src="https://img.imgdb.cn/item/6049e4735aedab222cfd9db3.png"></p><p><img src="https://img.imgdb.cn/item/6049e4815aedab222cfda7f5.png"></p><p>图中的233.exe为编译后文件名可自定义</p><h2 id="写在后面的话"><a href="#写在后面的话" class="headerlink" title="写在后面的话"></a>写在后面的话</h2><p>Vscode有很多美化教程，自己去网上找找吧</p><p>总之VScode永远的神，前后端一把梭</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>杂技浅尝</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>vscode</tag>
+      
+      <tag>c语言</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>手机开mincraft服务器</title>
+    <link href="/posts/22544/"/>
+    <url>/posts/22544/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>更新 2021-05-24</p></blockquote><p>修复链接失效问题</p><h1 id="利用闲置手机开minecraft服务器"><a href="#利用闲置手机开minecraft服务器" class="headerlink" title="利用闲置手机开minecraft服务器"></a>利用闲置手机开minecraft服务器</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>闲得无聊又想玩minecraft了,又因为我想玩mod整合包需要挂机,遂决定研究一下开服技术(本地开服自己玩)<br>众所周知安卓系统的底层是Linux,所以我有个大胆的想法，拿手机开服<br>我手上是一部屏幕有问题的小米5,我全程使用adb控制，利用<a href="https://gitee.com/Barryda/QtScrcpy" title="Qtscrcpy">Qtscrcpy</a>,感兴趣的可以自行了解一下。  </p><p>修改:部分截图使用另一部手机</p><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>首先安装<a href="https://play.google.com/store/apps/details?id=com.termux" title="Termux">Termux</a>,有能力的直接上google play,或者使用我提供的<a href="https://www.lanzoui.com/b00u78ude" title="Termux">安装包</a>,密码：2333。<br>Termux是用于在安卓上模拟linux操作的软件，因为是直接调用底层，所以几乎没有性能损失。  </p><p><img src="https://img.imgdb.cn/item/601134943ffa7d37b31e5adc.png"></p><p>然后打开Termux初始化,然后推荐换下<a href="https://mirrors.tuna.tsinghua.edu.cn/help/termux/" title="Tuna">清华源</a></p><p><del>&gt; sed -i ‘s@^(deb.*stable main)$@#\1\ndeb <a href="https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24">https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24</a> stable main@’ $PREFIX/etc/apt/sources.list<br>sed -i ‘s@^(deb.*games stable)$@#\1\ndeb <a href="https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24">https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24</a> games stable@’ $PREFIX/etc/apt/sources.list.d/game.list<br>sed -i ‘s@^(deb.*science stable)$@#\1\ndeb <a href="https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24">https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24</a> science stable@’ $PREFIX/etc/apt/sources.list.d/science.list<br>apt update &amp;&amp; apt upgrade</del></p><p>在新版termux中提供了一键换源命令</p><blockquote><p>termux-change-repo</p></blockquote><p><img src="https://pic.imgdb.cn/item/60ab7fbace272128a6b98647.png" alt="选第一个"></p><p><img src="https://pic.imgdb.cn/item/60ab7fd5ce272128a6ba1fad.png" alt="最下面这两个都可以"></p><p>然后更新一下</p><blockquote><p>apt update</p></blockquote><p>因为Termux的pkg源里没有jdk，所以我们借助某位大佬的脚本一键安装,<a href="https://github.com/MasterDevX/Termux-Java" title="Termux-Java">脚本地址</a>。<br>因为github时不时抽风，所以我将仓库clone到了gitee并修改了一下，仓库地址:<a href="https://gitee.com/logs404/Termux-Java" title="Termux-java">Termux-Java</a><br>下面是一键安装命令:</p><blockquote><p><code>pkg install wget &amp;&amp; wget https://gitee.com/logs404/Termux-Java/raw/master/installjava &amp;&amp; bash installjava</code>  </p></blockquote><p>安装成功之后输入</p><blockquote><p><code>java -version</code>  </p></blockquote><p>查看是否安装成功.<br>若出现Bad system call错误则需安装proot并运行termux-chroot</p><blockquote><p><code>pkg install proot &amp;&amp; termux-chroot</code>  </p></blockquote><p>然后再输入java -version就应该没问题了,以后每次运行java之前记得执行termux-chroot<br><img src="https://img.imgdb.cn/item/60114c223ffa7d37b32a4e53.png"></p><h2 id="开服"><a href="#开服" class="headerlink" title="开服"></a>开服</h2><p>有了java环境就能直接开服了,开服更详细的教程请去<a href="https://www.mcbbs.net/forum-multiplayer-1.html" title="开服教程">MCBBS</a>查看。<br>我这里选择的是catserver服务端，先下载</p><blockquote><p><code>wget https://ghproxy.com/https://github.com/Luohuayu/CatServer/releases/download/21.06.21/CatServer-5744880-universal.jar -O catserver.jar</code></p></blockquote><p>然后直接启动服务器,-Xmx2G后面这个2G代表分配2g内存</p><blockquote><p><code>java -Xmx2G -jar catserver.jar</code>  </p></blockquote><p>等出现这个界面输入stop停止服务器<br>然后你就会发现多了一堆东西，这些就是服务器配置文件了</p><p><img src="https://img.imgdb.cn/item/60114d023ffa7d37b32abf1c.png"></p><p><img src="https://img.imgdb.cn/item/60114d183ffa7d37b32acbd7.png"></p><h2 id="验证服务器"><a href="#验证服务器" class="headerlink" title="验证服务器"></a>验证服务器</h2><p>我稍微配置一下进游戏看看能不能用<br>先同意一下eula协议  </p><p><img src="https://img.imgdb.cn/item/6011477b3ffa7d37b3280736.png"></p><p>然后关闭正版验证  </p><p><img src="https://img.imgdb.cn/item/601147a43ffa7d37b3281aec.png">  </p><p>然后再次启动服务器,启动成功并顺手给自己上个op</p><blockquote><p>添加op方法 ，启动服务器后输入:<code>op 用户名</code></p></blockquote><p><img src="https://img.imgdb.cn/item/60114f9b3ffa7d37b32c154b.png">  </p><p>打开游戏添加服务器ip地址</p><p><img src="https://img.imgdb.cn/item/601149183ffa7d37b328d6ef.png"></p><p>ip为手机ip，默认端口为25565，然后，成功了，服务器开启了</p><p><img src="https://img.imgdb.cn/item/6011493e3ffa7d37b328e5c1.png"></p><h2 id="成功"><a href="#成功" class="headerlink" title="成功"></a>成功</h2><p>进游戏看看,，还行，原版没有任何压力</p><p><img src="https://img.imgdb.cn/item/601149b53ffa7d37b3292dd1.png"></p><p>本教程就到这里了，更多服务器配置教程可以参考<a href="https://www.mcbbs.net/thread-980386-1-1.html" title="零基础开服">mcbbs</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>杂技浅尝</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>termux</tag>
+      
+      <tag>linux</tag>
+      
+      <tag>android</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>博客优化</title>
+    <link href="/posts/27992/"/>
+    <url>/posts/27992/</url>
+    
+    <content type="html"><![CDATA[<h1 id="博客再次优化访问速度"><a href="#博客再次优化访问速度" class="headerlink" title="博客再次优化访问速度"></a>博客再次优化访问速度</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为国内的域名备案政策，在加上github pages时不时的dns污染，博客每日在生死的边缘挣扎<br>所以我尽可能的优化了一下博客</p><h2 id="一-访问加速"><a href="#一-访问加速" class="headerlink" title="一.访问加速"></a>一.访问加速</h2><p>这里使用了vercel来加速网站的访问，<br>虽说还是不能和之前套的cdn相比，但是也能稳定访问了(毕竟是白嫖的)  </p><h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>访问<a href="https://vercel.com/" title="Vercel">Vercel</a>,直接github登录,直接导入博客仓库<br>然后一路next,等它搭建完,还送一个二级域名：</p><blockquote><p><a href="https://96368a-github-io.vercel.app/" title="送的二级域">96368a-github-io.vercel.app</a></p></blockquote><p>然后就是绑定自己的域名了,点击项目的setting,<br>直接在Domains里添加即可,记得修改域名解析到</p><blockquote><p>cname.vercel-dns.com  </p></blockquote><p><img src="https://pic.downk.cc/item/5feb14b63ffa7d37b3b03a53.png"><br>有一说一，测速数据一如既往的难看<br><img src="https://pic.downk.cc/item/5feb1d333ffa7d37b3c00f6d.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>网站</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>hugo</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
