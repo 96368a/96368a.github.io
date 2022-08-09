@@ -1296,7 +1296,7 @@ static_prefix:
 
   valine: https://cdn.staticfile.org/valine/1.4.16/
 
-  waline: https://lib.baomitu.com/waline/1.6.0/
+  waline: https://cdn.bootcdn.net/ajax/libs/waline/2.6.2/
 
   gitalk: https://cdn.staticfile.org/gitalk/1.7.2/
 
