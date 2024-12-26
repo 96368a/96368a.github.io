@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-Allow: /archives/
-Allow: /categories/
-Allow: /tags/
-Allow: /about/
-
-Sitemap: https://blog.233c.cn/sitemap.xml
-Sitemap: https://blog.233c.cn/baidusitemap.xml
